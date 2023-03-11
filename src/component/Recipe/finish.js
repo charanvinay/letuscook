@@ -287,7 +287,7 @@ const Finish = (props) => {
                     <ImageIcon color="black" />
                   </Button> */}
                   <label for="test" style={{position:"relative"}}>
-                  <CameraAltIcon color="black" />
+                  {/* <CameraAltIcon color="black" /> */}
                     <input
                       id="test"
                       accept="image/*"
