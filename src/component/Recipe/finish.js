@@ -250,7 +250,46 @@ const Finish = (props) => {
   };
   return (
     <Box component="main" sx={{ px: 1, py: 2 }}>
-      <input
+      {displayEditors ? (
+        <>
+          <Box>
+            <Typography
+              variant="subtitle2"
+              sx={{ margin: "10px 0px", letterSpacing: 0.6 }}
+            >
+              Final Step
+            </Typography>
+            <Suspense fallback={<CKeditor />}>
+              <div className="ckeditor" style={{ position: "relative" }}>
+                <CKeditorRender
+                  value={recipe.finish.value}
+                  id={recipe.finish.id}
+                  handleChanges={(val) => {
+                    handleChanges(val);
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    position: "absolute",
+                    top: 9,
+                    right: 9,
+                  }}
+                >
+                  {/* <Button
+                    component="label"
+                    sx={{
+                      minWidth: "20px",
+                      color: grey[700],
+                      padding: "0px 6px",
+                    }}
+                  >
+                    <ImageIcon color="black" />
+                  </Button> */}
+                  <label for="test" style={{ position: "relative" }}>
+                    {/* <CameraAltIcon color="black" /> */}
+                    <input
                       id="test"
                       accept="image/*"
                       type="file"
@@ -259,6 +298,152 @@ const Finish = (props) => {
                         handleChanges(e.target.files[0], "image");
                       }}
                     />
+                  </label>
+                  {/* <Box
+                    sx={{
+                      minWidth: "20px",
+                      padding: "1px 0px 0px 0px",
+                      color: grey[700],
+                    }}
+                    // onClick={handleClick}
+                  >
+                    <CameraAltIcon color="black" />
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      id="uploadPhotoInput"
+                      name="uploadPhotoInput"
+                      capture="environment"
+                      value=""
+                      onChange={(e) => {
+                        e.preventDefault();
+                        alert(e.target.files[0].name);
+                        // handleChanges(e.target.files[0], "image");
+                      }}
+                      // onClick={handleClick}
+                    />
+                  </Box> */}
+                  {/* <Uploadbutton onImageUpload={(file)=>{ handleChanges(file, "image"); }}/> */}
+                </Box>
+              </div>
+            </Suspense>
+            <Box sx={{ marginY: "15px" }}>
+              {recipe.finish.imgSrc && <Divider />}
+            </Box>
+            {showSkeleton ? (
+              <Skeleton
+                variant="rectangular"
+                animation="wave"
+                width={"100%"}
+                height={120}
+              />
+            ) : (
+              <Grid container spacing={2}>
+                {recipe.finish.imgSrc && (
+                  <Grid item xs={12} md>
+                    <ImgWithLabelCard
+                      imgSrc={recipe.finish.imgSrc}
+                      title={`Final Image`}
+                    />
+                  </Grid>
+                )}
+              </Grid>
+            )}
+          </Box>
+          <Box
+            sx={
+              !isMobile
+                ? {
+                    margin: "20px 0px 10px 0px",
+                    ...bottomButtonsStyle,
+                  }
+                : { margin: "20px 0px 10px 0px" }
+            }
+          >
+            <Stack direction="row" spacing={2}>
+              <Button
+                fullWidth={isMobile}
+                variant="outlined"
+                startIcon={<ArrowBackIcon />}
+                onClick={goToPreviousPage}
+              >
+                Previous
+              </Button>
+              <Button
+                fullWidth={isMobile}
+                variant="contained"
+                endIcon={<Visibility />}
+                onClick={handleSubmit}
+              >
+                Preview
+              </Button>
+            </Stack>
+          </Box>
+          <ErrorAlert
+            snackopen={errorSnackOpen}
+            handleClose={handleCloseSnackbar}
+            text={errorText}
+          />
+          <SuccessAlert
+            snackopen={successSnackOpen}
+            handleClose={handleCloseSnackbar}
+            text={successText}
+          />
+        </>
+      ) : (
+        <Step />
+      )}
+      <Dialog
+        fullScreen
+        open={modalOpen}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <AppBar>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography
+              sx={{ ml: 2, flex: 1, textAlign: "center" }}
+              variant="h6"
+              component="div"
+            >
+              Preview
+            </Typography>
+            {location.pathname === "/add" ? (
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleSave}
+                endIcon={<SaveIcon />}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleUpdate}
+                endIcon={<LoopIcon />}
+              >
+                Update
+              </Button>
+            )}
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+        <CompleteRecipe />
+      </Dialog>
+      <Backdrop sx={{ color: primary, zIndex: 10000 }} open={loading}>
+        <CircularProgress sx={{ color: "white" }} />
+      </Backdrop>
     </Box>
   );
 };

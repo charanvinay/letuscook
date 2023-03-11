@@ -127,9 +127,33 @@ const Dashboard = () => {
     dispatch(setRecipeServes({ serves: null }));
   };
 
+  const handleChanges = (val, type) => {
+    let v = val;
+    if (type === "image") {
+      let file = val;
+      // if (!file) return;
+      // setShowSkeleton(true);
+      // if (recipe.finish.imgSrc) {
+      //   deletePreviousImage(recipe.finish.imgSrc);
+      // }
+      // handleUploadImage(file, type);
+    } else {
+      // dispatch(editFinish({ val: v, type }));
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ paddingX: 3, paddingY: 4 }}>
       <HeadingLGBlue text1="Explore" text2="Recipes" />
+      <input
+                      id="test"
+                      accept="image/*"
+                      type="file"
+                      name="imgSrc"
+                      onChange={(e) => {
+                        handleChanges(e.target.files[0], "image");
+                      }}
+                    />
       <Stack spacing={2} sx={{ marginY: 2 }}>
         <Paper
           component="form"
