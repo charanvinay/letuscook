@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
 function App() {
+  const [imgsrc, setImg] = useState(null);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        hidden
+        accept="image/*"
+        type="file"
+        id="uploadPhotoInput"
+        name="uploadPhotoInput"
+        capture="environment"
+        value=""
+        onChange={(e) => {
+          e.preventDefault();
+          alert(e.target.files[0].name);
+          setImg(URL.createObjectURL(e.target.files[0]));
+          // handleChanges(e.target.files[0], "image");
+        }}
+        // onClick={handleClick}
+      />
+      {imgsrc && <img src={imgsrc} alt="sdf" />}
     </div>
   );
 }
