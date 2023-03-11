@@ -104,9 +104,9 @@ const Finish = (props) => {
       let file = val;
       if (!file) return;
       setShowSkeleton(true);
-      if (recipe.finish.imgSrc) {
-        deletePreviousImage(recipe.finish.imgSrc);
-      }
+      // if (recipe.finish.imgSrc) {
+      //   deletePreviousImage(recipe.finish.imgSrc);
+      // }
       // handleUploadImage(file, type);
     } else {
       dispatch(editFinish({ val: v, type }));
