@@ -6,7 +6,6 @@ function App() {
   return (
     <div className="App">
       <input
-        hidden
         accept="image/*"
         type="file"
         id="uploadPhotoInput"
