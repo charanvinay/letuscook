@@ -276,7 +276,7 @@ const Finish = (props) => {
                     right: 9,
                   }}
                 >
-                  <Button
+                  {/* <Button
                     component="label"
                     sx={{
                       minWidth: "20px",
@@ -285,8 +285,11 @@ const Finish = (props) => {
                     }}
                   >
                     <ImageIcon color="black" />
+                  </Button> */}
+                  <label for="test" style={{position:"relative"}}>
+                  <CameraAltIcon color="black" />
                     <input
-                      hidden
+                      id="test"
                       accept="image/*"
                       type="file"
                       name="imgSrc"
@@ -294,7 +297,8 @@ const Finish = (props) => {
                         handleChanges(e.target.files[0], "image")
                       }
                     />
-                  </Button>
+
+                  </label>
                   {/* <Box
                     sx={{
                       minWidth: "20px",
@@ -320,7 +324,7 @@ const Finish = (props) => {
                       // onClick={handleClick}
                     />
                   </Box> */}
-                  <Uploadbutton onImageUpload={(file)=>{ handleChanges(file, "image"); }}/>
+                  {/* <Uploadbutton onImageUpload={(file)=>{ handleChanges(file, "image"); }}/> */}
                 </Box>
               </div>
             </Suspense>
