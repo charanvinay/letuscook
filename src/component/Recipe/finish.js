@@ -243,9 +243,8 @@ const Finish = (props) => {
     }
   };
 
-  const handleClick = (event) => {
-    const { target = {} } = event || {};
-    target.value = "";
+  const handleClick = (e) => {
+    e.preventDefault();
   };
   return (
     <Box component="main" sx={{ px: 1, py: 2 }}>
@@ -302,6 +301,7 @@ const Finish = (props) => {
                       padding: "1px 0px 0px 0px",
                       color: grey[700],
                     }}
+                    onClick={handleClick}
                   >
                     <CameraAltIcon color="black" />
                     <input
@@ -317,7 +317,7 @@ const Finish = (props) => {
                         alert(e.target.files[0].name);
                         // handleChanges(e.target.files[0], "image");
                       }}
-                      onClick={handleClick}
+                      // onClick={handleClick}
                     />
                   </Button>
                 </Box>
