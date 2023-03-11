@@ -107,7 +107,7 @@ const Finish = (props) => {
       if (recipe.finish.imgSrc) {
         deletePreviousImage(recipe.finish.imgSrc);
       }
-      handleUploadImage(file, type);
+      // handleUploadImage(file, type);
     } else {
       dispatch(editFinish({ val: v, type }));
     }
@@ -120,6 +120,7 @@ const Finish = (props) => {
         getDownloadURL(snapshot.ref)
           .then((url) => {
             console.log(url);
+            alert(url)
             dispatch(editFinish({ val: url, type }));
             setShowSkeleton(false);
           })
