@@ -102,12 +102,12 @@ const Finish = (props) => {
     let v = val;
     if (type === "image") {
       let file = val;
-      // if (!file) return;
+      if (!file) return;
       setShowSkeleton(true);
-      // if (recipe.finish.imgSrc) {
-      //   deletePreviousImage(recipe.finish.imgSrc);
-      // }
-      // handleUploadImage(file, type);
+      if (recipe.finish.imgSrc) {
+        deletePreviousImage(recipe.finish.imgSrc);
+      }
+      handleUploadImage(file, type);
     } else {
       dispatch(editFinish({ val: v, type }));
     }
@@ -120,7 +120,6 @@ const Finish = (props) => {
         getDownloadURL(snapshot.ref)
           .then((url) => {
             console.log(url);
-            alert(url);
             dispatch(editFinish({ val: url, type }));
             setShowSkeleton(false);
           })
@@ -277,7 +276,7 @@ const Finish = (props) => {
                     right: 9,
                   }}
                 >
-                  {/* <Button
+                  <Button
                     component="label"
                     sx={{
                       minWidth: "20px",
@@ -286,26 +285,23 @@ const Finish = (props) => {
                     }}
                   >
                     <ImageIcon color="black" />
-                  </Button> */}
-                  <label for="test" style={{ position: "relative" }}>
-                    {/* <CameraAltIcon color="black" /> */}
                     <input
-                      id="test"
+                      hidden
                       accept="image/*"
                       type="file"
                       name="imgSrc"
-                      onChange={(e) => {
-                        handleChanges(e.target.files[0], "image");
-                      }}
+                      onChange={(e) =>
+                        handleChanges(e.target.files[0], "image")
+                      }
                     />
-                  </label>
-                  {/* <Box
+                  </Button>
+                  {/* <Button
+                    component="label"
                     sx={{
                       minWidth: "20px",
                       padding: "1px 0px 0px 0px",
                       color: grey[700],
                     }}
-                    // onClick={handleClick}
                   >
                     <CameraAltIcon color="black" />
                     <input
@@ -321,10 +317,9 @@ const Finish = (props) => {
                         alert(e.target.files[0].name);
                         // handleChanges(e.target.files[0], "image");
                       }}
-                      // onClick={handleClick}
+                      onClick={handleClick}
                     />
-                  </Box> */}
-                  {/* <Uploadbutton onImageUpload={(file)=>{ handleChanges(file, "image"); }}/> */}
+                  </Button> */}
                 </Box>
               </div>
             </Suspense>

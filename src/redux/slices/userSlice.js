@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  activeStep: 2,
+  activeStep: 0,
   isMobile: true,
   loggedUser: {},
 };
