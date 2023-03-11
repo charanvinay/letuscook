@@ -149,9 +149,10 @@ const Dashboard = () => {
                       id="test"
                       accept="image/*"
                       type="file"
-                      capture 
+                      capture="camera" 
                       name="imgSrc"
                       onChange={(e) => {
+                        e.preventDefault();
                         handleChanges(e.target.files[0], "image");
                       }}
                     />
