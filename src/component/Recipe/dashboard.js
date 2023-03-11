@@ -142,20 +142,15 @@ const Dashboard = () => {
     }
   };
 
+  const handleImageUpload = (event) => {
+    event.preventDefault(); // prevent the browser from navigating to a new URL
+    
+  };
+
   return (
     <Container maxWidth="lg" sx={{ paddingX: 3, paddingY: 4 }}>
       <HeadingLGBlue text1="Explore" text2="Recipes" />
-      <input
-                      id="test"
-                      accept="image/*"
-                      type="file"
-                      capture="camera" 
-                      name="imgSrc"
-                      onChange={(e) => {
-                        e.preventDefault();
-                        handleChanges(e.target.files[0], "image");
-                      }}
-                    />
+      <input type="file" accept="image/*" capture="camera" onChange={handleImageUpload} />
       <Stack spacing={2} sx={{ marginY: 2 }}>
         <Paper
           component="form"
