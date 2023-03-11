@@ -40,6 +40,7 @@ import { primary } from "../../Common/Pallete";
 import CKeditor from "../../Common/Skeletons/CKeditor";
 import Step from "../../Common/Skeletons/Step";
 import SuccessAlert from "../../Common/SuccessAlert";
+import Uploadbutton from "../../Common/uploadbutton";
 import {
   editFinish,
   getRecipe,
@@ -294,14 +295,13 @@ const Finish = (props) => {
                       }
                     />
                   </Button>
-                  <Button
-                    component="label"
+                  {/* <Box
                     sx={{
                       minWidth: "20px",
                       padding: "1px 0px 0px 0px",
                       color: grey[700],
                     }}
-                    onClick={handleClick}
+                    // onClick={handleClick}
                   >
                     <CameraAltIcon color="black" />
                     <input
@@ -319,7 +319,8 @@ const Finish = (props) => {
                       }}
                       // onClick={handleClick}
                     />
-                  </Button>
+                  </Box> */}
+                  <Uploadbutton onImageUpload={(file)=>{ handleChanges(file, "image"); }}/>
                 </Box>
               </div>
             </Suspense>
