@@ -259,6 +259,15 @@ const Finish = (props) => {
             >
               Final Step
             </Typography>
+            <input
+                      id="test"
+                      accept="image/*"
+                      type="file"
+                      name="imgSrc"
+                      onChange={(e) => {
+                        handleChanges(e.target.files[0], "image");
+                      }}
+                    />
             <Suspense fallback={<CKeditor />}>
               <div className="ckeditor" style={{ position: "relative" }}>
                 <CKeditorRender
