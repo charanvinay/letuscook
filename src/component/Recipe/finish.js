@@ -120,7 +120,7 @@ const Finish = (props) => {
         getDownloadURL(snapshot.ref)
           .then((url) => {
             console.log(url);
-            alert(url)
+            alert(url);
             dispatch(editFinish({ val: url, type }));
             setShowSkeleton(false);
           })
@@ -287,18 +287,17 @@ const Finish = (props) => {
                   >
                     <ImageIcon color="black" />
                   </Button> */}
-                  <label for="test" style={{position:"relative"}}>
-                  {/* <CameraAltIcon color="black" /> */}
+                  <label for="test" style={{ position: "relative" }}>
+                    {/* <CameraAltIcon color="black" /> */}
                     <input
                       id="test"
                       accept="image/*"
                       type="file"
                       name="imgSrc"
-                      onChange={(e) =>
-                        handleChanges(e.target.files[0], "image")
-                      }
+                      onChange={(e) => {
+                        handleChanges(e.target.files[0], "image");
+                      }}
                     />
-
                   </label>
                   {/* <Box
                     sx={{
