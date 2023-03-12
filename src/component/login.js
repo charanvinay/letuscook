@@ -10,10 +10,13 @@ import { FcGoogle } from "react-icons/fc";
 import { auth, signInWithGoogle } from "../services/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BookLoaderComponent } from "../Common/BookLoader";
+import CustomBackdrop from "../Common/CustomBackdrop";
 
 function Login() {
   const [user, loading, error] = useAuthState(auth);
   const [pageLoading, setPageLoading] = useState(false);
+  const [loadBackdrop, setLoadBackdrop] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -27,10 +30,23 @@ function Login() {
     }
     console.log(user);
     if (user) {
-      navigate("/home");
+      customSetTimeout("/home")
     }
     setPageLoading(false);
   }, [user, loading]);
+
+  const customSetTimeout = (navTo) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    setLoadBackdrop(true);
+    const newTimeoutId = setTimeout(() => {
+      navigate(navTo);
+      setLoadBackdrop(false);
+    }, 1500);
+
+    setTimeoutId(newTimeoutId);
+  };
 
   return (
     <>
@@ -146,6 +162,7 @@ function Login() {
               </Box>
             </Box>
           </Container>
+          <CustomBackdrop loading={loadBackdrop} />
         </Box>
       )}
     </>

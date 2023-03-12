@@ -1,17 +1,12 @@
 import { Visibility } from "@mui/icons-material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import CloseIcon from "@mui/icons-material/Close";
 import ImageIcon from "@mui/icons-material/Image";
 import LoopIcon from "@mui/icons-material/Loop";
 import SaveIcon from "@mui/icons-material/Save";
 import {
-  AppBar,
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
+  AppBar, Box,
+  Button, Dialog,
   Divider,
   Grid,
   IconButton,
@@ -19,7 +14,7 @@ import {
   Slide,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
@@ -28,30 +23,29 @@ import {
   getDownloadURL,
   getStorage,
   ref,
-  uploadBytes,
+  uploadBytes
 } from "firebase/storage";
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { bottomButtonsStyle, getAllSubstrings } from "../../Common/Constants";
+import CustomBackdrop from "../../Common/CustomBackdrop";
 import ErrorAlert from "../../Common/ErrorAlert";
 import ImgWithLabelCard from "../../Common/ImgWithLabelCard";
-import { primary } from "../../Common/Pallete";
 import CKeditor from "../../Common/Skeletons/CKeditor";
 import Step from "../../Common/Skeletons/Step";
 import SuccessAlert from "../../Common/SuccessAlert";
-import Uploadbutton from "../../Common/uploadbutton";
 import {
   editFinish,
   getRecipe,
   initialState,
-  setSelectedRecipe,
+  setSelectedRecipe
 } from "../../redux/slices/recipeSlice";
 import {
   getIsMobile,
   getLoggedUser,
   handleBack,
-  handleReset,
+  handleReset
 } from "../../redux/slices/userSlice";
 import { db, storage } from "../../services/firebase";
 import CompleteRecipe from "./complete_recipe";
@@ -436,9 +430,7 @@ const Finish = (props) => {
         <Toolbar />
         <CompleteRecipe />
       </Dialog>
-      <Backdrop sx={{ color: primary, zIndex: 10000 }} open={loading}>
-        <CircularProgress sx={{ color: "white" }} />
-      </Backdrop>
+      <CustomBackdrop loading={loading} />
     </Box>
   );
 };
