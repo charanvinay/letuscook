@@ -49,8 +49,14 @@ thead tr th{
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.MuiChip-label, .MuiStepLabel-label{
+.MuiChip-label, .MuiStepLabel-label, .MuiListSubheader-root{
   font-family: "Poppins", sans-serif !important;
+}
+
+.MuiListSubheader-root{
+  font-weight: bold !important;
+  color: #176ede !important;
+  font-size: 16px !important;
 }
 
 .MuiStepLabel-label{
