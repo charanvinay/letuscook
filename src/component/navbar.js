@@ -1,6 +1,4 @@
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -23,7 +21,6 @@ const pages = [{ id: 1, tooltip: "Home", route: "/home" }, { id: 2, tooltip: "Fa
 const settings = ["Profile", "Logout"];
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
@@ -51,15 +48,8 @@ function Navbar() {
     }
   };
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (setting) => {
@@ -106,7 +96,7 @@ function Navbar() {
                   size="large"
                   onClick={() => navigate(page.route)}
                 >
-                  {page.id==2 && <FavoriteBorderIcon alt={page.tooltip} sx={{color: primary}} />}
+                  {page.id===2 && <FavoriteBorderIcon alt={page.tooltip} sx={{color: primary}} />}
                 </IconButton>
               </Tooltip>
             ))}

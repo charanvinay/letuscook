@@ -58,7 +58,7 @@ export default function OtherRecipes({ uid, name }) {
       }
     >
       {loadding ? (
-        [1, 2].map((loader) => <ListItem key={loader} />)
+        [1, 2].map((loader) => <div key={loader}><ListItem key={loader} /></div>)
       ) : (
         <>
           {recipesList.map((recipe, ind) => {

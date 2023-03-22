@@ -18,9 +18,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useDispatch, useSelector } from "react-redux";
 import NoData from "../../Assets/no_data_found.svg";
 import { recipeServes, recipeTypes } from "../../Common/Constants";
@@ -34,7 +33,7 @@ import {
   setRecipeType,
   setSearchText
 } from "../../redux/slices/filtersSlice";
-import { auth, db } from "../../services/firebase";
+import { db } from "../../services/firebase";
 import RecipeCard from "./recipe_card";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -42,7 +41,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Dashboard = () => {
-  const [user, loading] = useAuthState(auth);
   const [recipesList, setRecipesList] = useState([]);
   const [loadding, setLoadding] = useState(true);
   const [showFiltersModal, setShowFiltersModal] = useState(false);
@@ -78,7 +76,7 @@ const Dashboard = () => {
           recipes.push({ _id: doc.id, ...doc.data() });
         });
         if (filtersState.type) {
-          recipes = recipes.filter((dtype) => dtype.type == filtersState.type);
+          recipes = recipes.filter((dtype) => dtype.type === filtersState.type);
         }
         if (filtersState.serves) {
           recipes = recipes.filter(
@@ -235,7 +233,7 @@ const Dashboard = () => {
             justifyContent: "center",
           }}
         >
-          <img src={NoData} style={{ width: "150px", height: "150px" }} />
+          <img src={NoData} style={{ width: "150px", height: "150px" }} alt="No data"/>
           <Typography
             variant="body2"
             sx={{ textAlign: "center", color: grey[400] }}
@@ -256,7 +254,7 @@ const Dashboard = () => {
           <HeadingMD text={"RECIPE TYPE"} width={70} />
           <Stack direction="row" flexWrap="wrap" gap={1}>
             {recipeTypes.map((type, ind) =>
-              filtersState.type == type ? (
+              filtersState.type === type ? (
                 <Chip
                   label={type}
                   key={ind}
@@ -278,7 +276,7 @@ const Dashboard = () => {
           <HeadingMD text={"SERVES"} width={70} />
           <Stack direction="row" flexWrap="wrap" gap={1}>
             {recipeServes.map((serve, ind) =>
-              filtersState.serves == serve ? (
+              filtersState.serves === serve ? (
                 <Chip
                   label={serve}
                   key={ind}

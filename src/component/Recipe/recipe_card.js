@@ -16,18 +16,18 @@ import {
   Typography
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import Slide from "@mui/material/Slide";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import moment from 'moment';
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import GradientBLACK from "../../Assets/20210113_083213.png";
-import Serves from "../../Common/Ribbons/Serves";
-import { db } from "../../services/firebase";
-import Slide from "@mui/material/Slide";
 import { returnType } from "../../Common/Constants";
+import Serves from "../../Common/Ribbons/Serves";
 import { getLoggedUser } from "../../redux/slices/userSlice";
+import { db } from "../../services/firebase";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -38,7 +38,6 @@ const RecipeCard = (props) => {
   let { _id, uid, title, name, finish, serves, type, createdAt } = props.recipe;
   const [liked, setLiked] = useState(false);
   const [favouritedBy, setFavouritedBy] = useState(recipe.favouritedBy);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const loggedUser = useSelector(getLoggedUser);
   const [open, setOpen] = React.useState(false);
@@ -138,7 +137,7 @@ const RecipeCard = (props) => {
               finish.imgSrc ||
               "https://www.foodandwine.com/thmb/dMG6keGBcEF7XF8LZdR2y5dPrxc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/jamaican-jerk-chicken-FT-RECIPE0918-eabbd55da31f4fa9b74367ef47464351.jpg"
             }
-            alt={"Recipe Image"}
+            alt={"Recipe_Image"}
             style={{
               width: "100%",
               height: "100%",
@@ -195,6 +194,7 @@ const RecipeCard = (props) => {
             zIndex: 0,
             width: "100%",
           }}
+          alt={"Gradient"}
           src={GradientBLACK}
         />
       </Card>

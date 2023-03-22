@@ -107,7 +107,7 @@ const UserRecipes = () => {
               justifyContent: "center",
             }}
           >
-            <img src={NoData} style={{ width: "150px", height: "150px" }} />
+            <img src={NoData} style={{ width: "150px", height: "150px" }} alt="No data"/>
             <Typography
               variant="body2"
               sx={{ textAlign: "center", color: grey[400] }}

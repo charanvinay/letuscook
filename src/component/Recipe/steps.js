@@ -94,7 +94,7 @@ const RecipeSteps = (props) => {
           {recipe.steps?.map((step, skey) => {
             return (
               <Box key={step.id}>
-                {skey == 0 ? (
+                {skey === 0 ? (
                   <Typography
                     variant="subtitle2"
                     sx={{ margin: "10px 0px", letterSpacing: 0.6 }}
