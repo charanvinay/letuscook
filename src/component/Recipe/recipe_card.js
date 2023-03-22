@@ -77,7 +77,7 @@ const RecipeCard = (props) => {
   const deleteFinalImage = (photo) => {
     const storage = getStorage();
     const storageRef = ref(storage, photo);
-    console.log(storageRef);
+    // console.log(storageRef);
     deleteObject(storageRef)
       .then(() => {
         console.log("File deleted successfully");
@@ -89,7 +89,7 @@ const RecipeCard = (props) => {
 
   const handleLikeRecipe = () => {
     const taskDocRef = doc(db, "recipes", recipe._id);
-    console.log(taskDocRef, recipe);
+    // console.log(taskDocRef, recipe);
     try {
       let favourited_by = favouritedBy;
       if (liked) {
@@ -102,7 +102,7 @@ const RecipeCard = (props) => {
       };
       updateDoc(taskDocRef, recipe_obj)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setFavouritedBy(favourited_by);
           setLiked(!liked);
         })

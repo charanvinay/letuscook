@@ -38,7 +38,7 @@ const PrimaryDetails = (props) => {
   const dispatch = useDispatch();
   const recipe = useSelector(getRecipe);
   const isMobile = useSelector(getIsMobile);
-  console.log(recipe);
+  // console.log(recipe);
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {

@@ -4,7 +4,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 const Uploadbutton = (props) => {
   const uploadChange = (file) => {
-    console.log(file);
+    // console.log(file);
     props.onImageUpload(file);
   };
   return (

@@ -38,7 +38,7 @@ const RecipeDetails = () => {
   const loggedUser = useSelector(getLoggedUser);
 
   useEffect(() => {
-    console.log(id);
+    // console.log(id);
     if (id) {
       viewRecipe(id);
     }
@@ -50,7 +50,7 @@ const RecipeDetails = () => {
     try {
       getDoc(docRef)
         .then((docSnap) => {
-          console.log(docSnap.data());
+          // console.log(docSnap.data());
           setRecipe({ _id: id, ...docSnap.data() });
           setLoading(false);
         })

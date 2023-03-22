@@ -113,7 +113,7 @@ const Finish = (props) => {
       .then((snapshot) => {
         getDownloadURL(snapshot.ref)
           .then((url) => {
-            console.log(url);
+            // console.log(url);
             dispatch(editFinish({ val: url, type }));
             setShowSkeleton(false);
           })
@@ -131,7 +131,7 @@ const Finish = (props) => {
   const deletePreviousImage = (photo) => {
     const storage = getStorage();
     const storageRef = ref(storage, photo);
-    console.log(storageRef);
+    // console.log(storageRef);
     deleteObject(storageRef)
       .then(() => {
         console.log("File deleted successfully");
@@ -196,7 +196,7 @@ const Finish = (props) => {
         ...recipe,
         title_keywords: getAllSubstrings(recipe?.title),
       };
-      console.log(recipe_obj);
+      // console.log(recipe_obj);
       addDoc(collection(db, "recipes"), recipe_obj)
         .then((res) => {
           setSuccessSnackOpen(true);
@@ -212,7 +212,7 @@ const Finish = (props) => {
   const handleUpdate = () => {
     setLoading(true);
     const taskDocRef = doc(db, "recipes", recipe._id);
-    console.log(taskDocRef);
+    // console.log(taskDocRef);
     try {
       let recipe_obj = {
         _id: recipe._id,

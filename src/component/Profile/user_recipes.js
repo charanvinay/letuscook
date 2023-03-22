@@ -41,7 +41,7 @@ const UserRecipes = () => {
         user_docs.docs.map((doc) => {
           recipes.push({ _id: doc.id, ...doc.data() });
         });
-        console.log(recipes);
+        // console.log(recipes);
         setRecipesList([...recipes]);
       }
     } catch (error) {

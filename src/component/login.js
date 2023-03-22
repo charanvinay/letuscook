@@ -29,7 +29,7 @@ function Login() {
       setPageLoading(true);
       return;
     }
-    console.log(user);
+    // console.log(user);
     if(isLoggedin && user){
       customSetTimeout("/home")
     }

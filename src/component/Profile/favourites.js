@@ -29,7 +29,7 @@ const Favorite = () => {
       // where("uid", "==", user?.uid)
     );
     let user_docs = await getDocs(user_ref);
-    console.log(user_docs.docs);
+    // console.log(user_docs.docs);
     if (user_docs.docs.length > 0) {
       let recipes = [];
       user_docs.docs.map((doc) => {
@@ -38,7 +38,7 @@ const Favorite = () => {
           recipes.push({ _id: doc.id, ...data });
         }
       });
-      console.log(recipes);
+      // console.log(recipes);
       setRecipesList([...recipes]);
     }
     setLoadding(false);

@@ -78,7 +78,7 @@ export const generateDownload = async (imageSrc, crop) => {
       anchor.click();
 
       window.URL.revokeObjectURL(previewUrl);
-      console.log(previewUrl);
+      // console.log(previewUrl);
     },
     "image/jpeg",
     0.66

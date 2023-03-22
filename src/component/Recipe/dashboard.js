@@ -71,7 +71,7 @@ const Dashboard = () => {
         
       );
       let user_docs = await getDocs(user_ref);
-      console.log(user_docs.docs);
+      // console.log(user_docs.docs);
       if (user_docs.docs.length > 0) {
         let recipes = [];
         user_docs.docs.map((doc) => {
@@ -85,7 +85,7 @@ const Dashboard = () => {
             (dserves) => dserves.serves === filtersState.serves
           );
         }
-        console.log(recipes);
+        // console.log(recipes);
         setRecipesList([...recipes]);
       }
       setLoadding(false);
@@ -150,7 +150,7 @@ const Dashboard = () => {
             value={filtersState.searchText}
             onChange={(e) => {
               e.preventDefault();
-              console.log(e.target.value);
+              // console.log(e.target.value);
               dispatch(setSearchText({ searchText: e.target.value }));
             }}
           />

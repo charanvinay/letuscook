@@ -43,7 +43,7 @@ function Navbar() {
 
   const fetchUserDetails = () => {
     let user_obj = JSON.parse(localStorage.getItem("loggedUser"));
-    console.log(user_obj);
+    // console.log(user_obj);
     if (user_obj) {
       dispatch(handleLoggedUser(user_obj));
     } else {

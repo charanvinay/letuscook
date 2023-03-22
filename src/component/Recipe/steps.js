@@ -29,7 +29,7 @@ const RecipeSteps = (props) => {
 
   const recipe = useSelector(getRecipe);
   const isMobile = useSelector(getIsMobile);
-  console.log(recipe);
+  // console.log(recipe);
 
   const dispatch = useDispatch();
 
