@@ -26,7 +26,7 @@ export const storage = getStorage(app)
 
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
-  const isLoggedin = false;
+  let isLoggedin = false;
   try {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
