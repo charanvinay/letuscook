@@ -238,9 +238,6 @@ const Finish = (props) => {
     }
   };
 
-  const handleClick = (e) => {
-    e.preventDefault();
-  };
   return (
     <Box component="main" sx={{ px: 1, py: 2 }}>
       {displayEditors ? (

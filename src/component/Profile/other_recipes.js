@@ -75,7 +75,7 @@ export default function OtherRecipes({ uid, name }) {
                     secondary={`${recipe.type} | Serves - ${recipe.serves}`}
                   />
                 </ListItemButton>
-                {recipesList.length - 1 != ind && <Divider />}
+                {recipesList.length - 1 !== ind && <Divider />}
               </div>
             );
           })}

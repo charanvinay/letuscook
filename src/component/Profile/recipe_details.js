@@ -6,7 +6,7 @@ import {
   Grid,
   Paper,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import moment from "moment";
@@ -16,17 +16,16 @@ import HeadingXLBold from "../../Common/HeadingXLBold";
 import ImgWithBorder from "../../Common/ImgWithBorder";
 import Subtitle1 from "../../Common/Subtitle1";
 
-import { doc, getDoc } from "firebase/firestore";
-import { useLocation, useNavigate } from "react-router-dom";
-import Serves from "../../Common/Ribbons/Serves";
-import Veg from "../../Common/Ribbons/Veg";
-import { db } from "../../services/firebase";
-import { BookLoaderComponent } from "../../Common/BookLoader";
 import EditIcon from "@mui/icons-material/Edit";
+import { doc, getDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
-import { getLoggedUser } from "../../redux/slices/userSlice";
-import { setSelectedRecipe } from "../../redux/slices/recipeSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BookLoaderComponent } from "../../Common/BookLoader";
 import { returnType } from "../../Common/Constants";
+import Serves from "../../Common/Ribbons/Serves";
+import { setSelectedRecipe } from "../../redux/slices/recipeSlice";
+import { getLoggedUser } from "../../redux/slices/userSlice";
+import { db } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
 
 const RecipeDetails = () => {
@@ -152,7 +151,7 @@ const RecipeDetails = () => {
                   <ImgWithBorder imgSrc={recipe.finish.imgSrc} />
                 )}
               </Stack>
-              {loggedUser.uid == recipe.uid && (
+              {loggedUser.uid === recipe.uid && (
                 <Fab
                   color="primary"
                   aria-label="add"

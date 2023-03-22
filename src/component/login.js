@@ -1,19 +1,19 @@
 import { Box, Button, Container } from "@mui/material";
+import { useTheme } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { bgSecondary, primary } from "../Common/Pallete";
-import login from "../Assets/login.png";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
 import dotsb from "../Assets/dotsb.png";
 import dotscross from "../Assets/dotscross.png";
-import { useTheme } from "@mui/system";
-import { useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { auth, signInWithGoogle } from "../services/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import login from "../Assets/login.png";
 import { BookLoaderComponent } from "../Common/BookLoader";
 import CustomBackdrop from "../Common/CustomBackdrop";
+import { bgSecondary, primary } from "../Common/Pallete";
+import { auth, signInWithGoogle } from "../services/firebase";
 
 function Login() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [pageLoading, setPageLoading] = useState(false);
   const [isLoggedin, setIsLoggedin] = useState(false)
   const [loadBackdrop, setLoadBackdrop] = useState(false);
