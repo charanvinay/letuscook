@@ -15,6 +15,7 @@ import CustomBackdrop from "../Common/CustomBackdrop";
 function Login() {
   const [user, loading, error] = useAuthState(auth);
   const [pageLoading, setPageLoading] = useState(false);
+  const [isLoggedin, setIsLoggedin] = useState(false)
   const [loadBackdrop, setLoadBackdrop] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const theme = useTheme();
@@ -29,11 +30,14 @@ function Login() {
       return;
     }
     console.log(user);
-    if (user) {
+    if(isLoggedin && user){
       customSetTimeout("/home")
     }
+    else if (user) {
+      navigate("/home");
+    }
     setPageLoading(false);
-  }, [user, loading]);
+  }, [user, loading, isLoggedin]);
 
   const customSetTimeout = (navTo) => {
     if (timeoutId) {
@@ -132,7 +136,12 @@ function Login() {
                   <Button
                     variant="contained"
                     fullWidth={true}
-                    onClick={signInWithGoogle}
+                    onClick={()=>{
+                      const isloggedin = signInWithGoogle();
+                      if(isloggedin){
+                        setIsLoggedin(isloggedin);
+                      }
+                    }}
                     sx={{
                       backgroundColor: "white",
                       color: primary,

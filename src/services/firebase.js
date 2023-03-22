@@ -26,6 +26,7 @@ export const storage = getStorage(app)
 
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
+  const isLoggedin = false;
   try {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
@@ -44,8 +45,11 @@ const signInWithGoogle = async () => {
     );
     let user_docs = await getDocs(loggedUser);
     if (user_docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), user_obj);
+      addDoc(collection(db, "users"), user_obj).then(res=>{
+        isLoggedin = true;
+      });
     }
+    return isLoggedin;
   } catch (error) {
     console.log(error);
   }
