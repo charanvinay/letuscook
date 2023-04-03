@@ -13,13 +13,13 @@ import {
   DialogTitle,
   Stack,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Slide from "@mui/material/Slide";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
-import moment from 'moment';
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +28,7 @@ import { returnType } from "../../Common/Constants";
 import Serves from "../../Common/Ribbons/Serves";
 import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
+import { motion } from "framer-motion";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -108,9 +109,9 @@ const RecipeCard = (props) => {
         .catch((err) => {
           console.log(err);
         });
-        if(isReloadList){
-          props.getUserRecipes();
-        }
+      if (isReloadList) {
+        props.getUserRecipes();
+      }
     } catch (error) {
       console.log(error);
       alert(error.message);
@@ -118,146 +119,158 @@ const RecipeCard = (props) => {
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
-      <Card
-        sx={{
-          borderRadius: "10px",
-          position: "relative",
-          cursor: "pointer",
-          boxShadow:
-            "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
-        }}
-        onClick={() => {
-          navigate(navTo);
-        }}
-      >
-        <Box sx={{ height: 300 }}>
-          <img
-            src={
-              finish.imgSrc ||
-              "https://www.foodandwine.com/thmb/dMG6keGBcEF7XF8LZdR2y5dPrxc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/jamaican-jerk-chicken-FT-RECIPE0918-eabbd55da31f4fa9b74367ef47464351.jpg"
-            }
-            alt={"Recipe_Image"}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-            loading="lazy"
-          />
-        </Box>
-        <CardContent
+    <motion.div
+      key={recipe._id}
+      initial={{ opacity: 0 }}
+      whileInView={{ y: [20, 0], opacity: [0, 1] }}
+      transition={{ duration: 0.7, ease: "easeInOut" }}
+      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }}
+    >
+      <Box sx={{ position: "relative" }}>
+        <Card
           sx={{
-            width: "90%",
-            // padding: "20px",
-            zIndex: 1,
-            position: "absolute",
-            bottom: 0,
+            borderRadius: "10px",
+            position: "relative",
+            cursor: "pointer",
+            boxShadow:
+              "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
+          }}
+          onClick={() => {
+            navigate(navTo);
           }}
         >
-          <Typography
-            variant="h4"
-            color="white"
+          <Box sx={{ height: 300 }}>
+            <img
+              src={
+                finish.imgSrc ||
+                "https://www.foodandwine.com/thmb/dMG6keGBcEF7XF8LZdR2y5dPrxc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/jamaican-jerk-chicken-FT-RECIPE0918-eabbd55da31f4fa9b74367ef47464351.jpg"
+              }
+              alt={"Recipe_Image"}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              loading="lazy"
+            />
+          </Box>
+          <CardContent
             sx={{
-              textTransform: "capitalize",
-              fontFamily: "Product Sans Bold",
-              fontWeight: "bold",
-              letterSpacing: 1,
+              width: "90%",
+              // padding: "20px",
+              zIndex: 1,
+              position: "absolute",
+              bottom: 0,
             }}
           >
-            {title}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            color="#cbcaca"
-            sx={{ textTransform: "capitalize", letterSpacing: 0.5 }}
+            <Typography
+              variant="h4"
+              color="white"
+              sx={{
+                textTransform: "capitalize",
+                fontFamily: "Product Sans Bold",
+                fontWeight: "bold",
+                letterSpacing: 1,
+              }}
+            >
+              {title}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color="#cbcaca"
+              sx={{ textTransform: "capitalize", letterSpacing: 0.5 }}
+            >
+              {` by ${name} | ${moment
+                .utc(createdAt)
+                .local()
+                .startOf("seconds")
+                .fromNow()}`}
+            </Typography>
+          </CardContent>
+          <div
+            style={{
+              backgroundImage:
+                "linear-gradient(rgb(0 0 0 / 40%) 0%, transparent 20%)",
+              height: "100%",
+              position: "absolute",
+              top: 0,
+              zIndex: 0,
+              width: "100%",
+            }}
+          />
+          <img
+            style={{
+              height: "60%",
+              position: "absolute",
+              bottom: 0,
+              zIndex: 0,
+              width: "100%",
+            }}
+            alt={"Gradient"}
+            src={GradientBLACK}
+          />
+        </Card>
+        <Tooltip title="Add to favourite">
+          <IconButton
+            size="large"
+            sx={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              backgroundColor: "rgba(0,0,0,0.2) !important",
+            }}
+            onClick={(e) => {
+              if (props?.uid === uid) {
+                handleClickOpen();
+              } else {
+                handleLikeRecipe();
+              }
+            }}
           >
-            {` by ${name} | ${moment.utc(createdAt).local().startOf('seconds').fromNow()}`}
-          </Typography>
-        </CardContent>
-        <div
-          style={{
-            backgroundImage:
-              "linear-gradient(rgb(0 0 0 / 40%) 0%, transparent 20%)",
-            height: "100%",
-            position: "absolute",
-            top: 0,
-            zIndex: 0,
-            width: "100%",
-          }}
-        />
-        <img
-          style={{
-            height: "60%",
-            position: "absolute",
-            bottom: 0,
-            zIndex: 0,
-            width: "100%",
-          }}
-          alt={"Gradient"}
-          src={GradientBLACK}
-        />
-      </Card>
-      <Tooltip title="Add to favourite">
-        <IconButton
-          size="large"
-          sx={{
-            position: "absolute",
-            top: 5,
-            right: 5,
-            backgroundColor: "rgba(0,0,0,0.2) !important",
-          }}
-          onClick={(e) => {
-            if (props?.uid === uid) {
-              handleClickOpen();
-            } else {
-              handleLikeRecipe();
-            }
-          }}
+            {props?.uid === uid ? (
+              <DeleteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+            ) : liked ? (
+              <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+            ) : (
+              <FavoriteBorderIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Stack
+          sx={{ position: "absolute", top: 8, left: 8 }}
+          direction="row"
+          spacing={1}
         >
-          {props?.uid === uid ? (
-            <DeleteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-          ) : liked ? (
-            <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-          ) : (
-            <FavoriteBorderIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-          )}
-        </IconButton>
-      </Tooltip>
-      <Stack
-        sx={{ position: "absolute", top: 8, left: 8 }}
-        direction="row"
-        spacing={1}
-      >
-        {returnType(type)}
-        <Serves serves={serves} />
-      </Stack>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Are you sure want to delete this recipe?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            This process is irreversible. Once deleted, you no longer have this
-            in you list.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" color="error" onClick={handleClose}>
-            No
-          </Button>
-          <Button variant="contained" onClick={handleDelete} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+          {returnType(type)}
+          <Serves serves={serves} />
+        </Stack>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are you sure want to delete this recipe?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              This process is irreversible. Once deleted, you no longer have
+              this in you list.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="error" onClick={handleClose}>
+              No
+            </Button>
+            <Button variant="contained" onClick={handleDelete} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </motion.div>
   );
 };
 

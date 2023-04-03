@@ -70,3 +70,23 @@ thead tr th{
   bottom: 0;
   width: 100%;
 } */
+
+.progress-bar {
+  position: fixed;
+  z-index: 1000000;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  /* scroll-behavior: smooth; */
+  background: var(--primary);
+  transition: width 0.05s ease;
+  border-radius: 0 5px 5px 0px;
+  /* transform-origin: 0%; */
+}
+
+.fixed-image{
+  position: sticky;
+  top:0;
+  filter: brightness(80%)
+}

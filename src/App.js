@@ -19,7 +19,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         {location.pathname !== "/" && <Navbar />}
-        {location.pathname !== "/" && <Toolbar />}
+        {location.pathname !== "/" && !location.pathname.includes("/view") && <Toolbar />}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
