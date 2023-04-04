@@ -9,6 +9,7 @@ import RecipeCardSkeleton from "../../Common/Skeletons/RecipeCard";
 import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import RecipeCard from "../Recipe/recipe_card";
+import { motion } from "framer-motion";
 
 const Favorite = () => {
   const [recipesList, setRecipesList] = useState([]);
@@ -57,7 +58,17 @@ const Favorite = () => {
       )}
       {!loadding && recipesList.length > 0 ? (
         <Box sx={{ marginTop: 2 }}>
+          <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: [0, 1] }}
+        transition={{
+          duration: 0.5,
+          ease: "easeInOut",
+        }}
+      >
+
           <HeadingLGBlue text1="Explore" text2="Favourites" />
+      </motion.div>
           <Grid container spacing={3} sx={{ marginTop: 2 }}>
             {recipesList?.map((recipe) => {
               return (

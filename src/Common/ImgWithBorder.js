@@ -9,9 +9,8 @@ const ImgWithBorder = (props) => {
         borderColor: "grey.500",
         borderRadius: "2px",
         padding: "5px",
-        marginLeft: "15px",
         marginTop: "10px",
-        height: 150,
+        // height: 200,
       }}
     >
       <img

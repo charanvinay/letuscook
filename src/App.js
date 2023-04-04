@@ -15,7 +15,7 @@ import { store } from "./redux/store";
 function App() {
   const location = useLocation();
   const isMobile = window.innerWidth < 800;
-  const [showNav, setShowNav] = useState(false);
+  const [showNav, setShowNav] = useState(true);
 
   useEffect(() => {
     handleShownav();

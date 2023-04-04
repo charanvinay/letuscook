@@ -7,7 +7,7 @@ import {
   Stack,
   Tooltip,
   Typography,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -34,7 +34,7 @@ import { setSelectedRecipe } from "../../redux/slices/recipeSlice";
 import {
   getActiveTab,
   getIsMobile,
-  setActiveTab
+  setActiveTab,
 } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
@@ -309,32 +309,46 @@ const RecipeDetails = () => {
                         [bpSMd]: { display: activeTab == 2 ? "none" : "block" },
                       }}
                     >
-                      {recipe.ingredients.map((step, skey) => {
-                        return (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            key={skey}
-                            whileInView={{ y: [20, 0], opacity: [0, 1] }}
-                            transition={{
-                              duration: 0.5,
-                              ease: "easeInOut",
-                            }}
-                          >
-                            <Stack
-                              direction={"row"}
-                              justifyContent="space-between"
-                              className="row-item"
+                      <Grid
+                        container
+                        spacing={{ xs: 1, md: 3 }}
+                      >
+                        {recipe.ingredients.map((step, skey) => {
+                          return (
+                            <Grid
+                              item
+                              md={6}
+                              lg={6}
+                              sx={{
+                                width: "100%",
+                              }}
                             >
-                              <Subtitle1 text={step.value} />
-                              <Subtitle1
-                                text={step.units}
-                                color={"rgb(46 103 175)"}
-                                fontWeight="bold"
-                              />
-                            </Stack>
-                          </motion.div>
-                        );
-                      })}
+                              <motion.div
+                                initial={{ opacity: 0 }}
+                                key={skey}
+                                whileInView={{ y: [20, 0], opacity: [0, 1] }}
+                                transition={{
+                                  duration: 0.5,
+                                  ease: "easeInOut",
+                                }}
+                              >
+                                <Stack
+                                  direction={"row"}
+                                  justifyContent="space-between"
+                                  className="row-item"
+                                >
+                                  <Subtitle1 text={step.value} />
+                                  <Subtitle1
+                                    text={step.units}
+                                    color={"rgb(46 103 175)"}
+                                    fontWeight="bold"
+                                  />
+                                </Stack>
+                              </motion.div>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
                     </Box>
                     <Box
                       sx={{
@@ -430,8 +444,7 @@ const RecipeDetails = () => {
                     }}
                   >
                     <Paper
-                      variant="outlined"
-                      sx={{ borderRadius: "8px", overflow: "hidden" }}
+                      sx={{ borderRadius: "8px",padding:"10px", overflow: "hidden", boxShadow: "0px 1px 8px rgb(23 110 222 / 10%)", }}
                     >
                       <OtherRecipes uid={recipe.uid} name={recipe.name} />
                     </Paper>

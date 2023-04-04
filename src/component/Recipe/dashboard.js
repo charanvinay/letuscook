@@ -10,8 +10,9 @@ import {
   Grid,
   IconButton,
   InputBase,
-  Paper, Stack,
-  Typography
+  Paper,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
@@ -31,10 +32,11 @@ import {
   setIsFiltersApplied,
   setRecipeServes,
   setRecipeType,
-  setSearchText
+  setSearchText,
 } from "../../redux/slices/filtersSlice";
 import { db } from "../../services/firebase";
 import RecipeCard from "./recipe_card";
+import { motion } from "framer-motion";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -64,9 +66,12 @@ const Dashboard = () => {
     try {
       let user_ref = query(
         collection(db, "recipes"),
-        where("title_keywords", "array-contains", filtersState.searchText?.toLowerCase()),
+        where(
+          "title_keywords",
+          "array-contains",
+          filtersState.searchText?.toLowerCase()
+        )
         // orderBy("type"),
-        
       );
       let user_docs = await getDocs(user_ref);
       // console.log(user_docs.docs);
@@ -127,8 +132,26 @@ const Dashboard = () => {
 
   return (
     <Container maxWidth="lg" sx={{ paddingX: 3, paddingY: 4 }}>
-      <HeadingLGBlue text1="Explore" text2="Recipes" />
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: [0, 1] }}
+        transition={{
+          duration: 0.5,
+          ease: "easeInOut",
+        }}
+      >
+        <HeadingLGBlue text1="Explore" text2="Recipes" />
+      </motion.div>
       <Stack spacing={2} sx={{ marginY: 2 }}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: [0, 1] }}
+        transition={{
+          duration: 0.5,
+          ease: "easeInOut",
+        }}
+      >
+
         <Paper
           component="form"
           elevation={0}
@@ -163,11 +186,21 @@ const Dashboard = () => {
             </IconButton>
           )}
         </Paper>
+      </motion.div>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           {filtersState.isFiltersApplied && (
             <Stack direction="row" spacing={1}>
               {Boolean(type) && (
-                <Chip label={type} onDelete={handleResetType} />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ scale: [0, 1], opacity: [0, 1] }}
+                  transition={{
+                    duration: 0.4,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Chip label={type} onDelete={handleResetType} />
+                </motion.div>
               )}
               {Boolean(serves) && (
                 <Chip
@@ -233,7 +266,11 @@ const Dashboard = () => {
             justifyContent: "center",
           }}
         >
-          <img src={NoData} style={{ width: "150px", height: "150px" }} alt="No data"/>
+          <img
+            src={NoData}
+            style={{ width: "150px", height: "150px" }}
+            alt="No data"
+          />
           <Typography
             variant="body2"
             sx={{ textAlign: "center", color: grey[400] }}

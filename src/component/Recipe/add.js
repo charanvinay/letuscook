@@ -10,8 +10,12 @@ import PrimaryDetails from "./primary_details";
 import RecipeSteps from "./steps";
 import Finish from "./finish";
 import { useDispatch, useSelector } from "react-redux";
-import { getActiveStep, getIsMobile, setIsMobile } from "../../redux/slices/userSlice";
-
+import {
+  getActiveStep,
+  getIsMobile,
+  setIsMobile,
+} from "../../redux/slices/userSlice";
+import { motion } from "framer-motion";
 const steps = [
   {
     label: "Title & Ingredients",
@@ -34,9 +38,42 @@ export default function AddRecipe() {
     dispatch(setIsMobile(window.innerWidth < 800));
   }, []);
 
-  const cmp_PrimaryDetails = () => <PrimaryDetails />;
-  const cmp_RecipeSteps = () => <RecipeSteps />;
-  const cmp_Finish = () => <Finish />;
+  const cmp_PrimaryDetails = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ y: [20, 0], opacity: [0, 1] }}
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+      }}
+    >
+      <PrimaryDetails />
+    </motion.div>
+  );
+  const cmp_RecipeSteps = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ y: [20, 0], opacity: [0, 1] }}
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+      }}
+    >
+      <RecipeSteps />
+    </motion.div>
+  );
+  const cmp_Finish = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ y: [20, 0], opacity: [0, 1] }}
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+      }}
+    >
+      <Finish />
+    </motion.div>
+  );
 
   return (
     <Box component="main" sx={{ paddingX: 3, paddingY: 6 }}>
