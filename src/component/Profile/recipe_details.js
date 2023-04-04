@@ -209,7 +209,7 @@ const RecipeDetails = () => {
                     {recipe.name}
                   </Typography>
                   <Typography variant="caption" sx={{ color: "white" }}>
-                    posted on {moment(recipe.createdAt).format("LLL")}
+                    {moment(recipe.createdAt).format("LLL")}
                   </Typography>
                 </Stack>
               </Stack>
