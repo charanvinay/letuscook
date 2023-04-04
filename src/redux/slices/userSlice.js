@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   activeStep: 0,
   isMobile: true,
+  activeTab: 1,
   loggedUser: {},
 };
 export const userSlice = createSlice({
@@ -21,6 +22,9 @@ export const userSlice = createSlice({
     handleLoggedUser: (state, action) => {
       state.loggedUser = action.payload;
     },
+    setActiveTab: (state, action) => {
+      state.activeTab = action.payload;
+    },
     setIsMobile: (state, action) => {
       state.isMobile = action.payload
     }
@@ -29,6 +33,7 @@ export const userSlice = createSlice({
 
 export const getIsMobile = (state) => state.userReducer.isMobile;
 export const getActiveStep = (state) => state.userReducer.activeStep;
+export const getActiveTab = (state) => state.userReducer.activeTab;
 export const getLoggedUser = (state) => state.userReducer.loggedUser;
-export const { handleNext, handleBack, handleReset, handleLoggedUser, setIsMobile } = userSlice.actions;
+export const { handleNext, handleBack, handleReset, handleLoggedUser, setIsMobile, setActiveTab } = userSlice.actions;
 export default userSlice.reducer;

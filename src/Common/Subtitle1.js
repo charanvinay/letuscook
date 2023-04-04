@@ -3,13 +3,12 @@ import React from "react";
 
 function Subtitle1(props) {
   const theme = useTheme();
-  const bpSMd = theme.breakpoints.down("sm");
   return (
     <Typography
       variant="subtitle1"
-      color="text.primary"
+      color={props.color || "text.primary"}
       className="custom-subtitle1"
-      sx={{ fontSize: "18px", [bpSMd]: { fontSize: "16px" } }}
+      sx={{ fontSize: "18px", fontWeight: props.fontWeight || "normal" }}
     >
       <div dangerouslySetInnerHTML={{ __html: props.text }} />
     </Typography>
