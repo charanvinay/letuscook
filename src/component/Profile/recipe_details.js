@@ -1,33 +1,41 @@
 import {
-  Avatar,
   Box,
   Container,
   Fab,
   Grid,
   Paper,
   Stack,
+  Tooltip,
   Typography,
-  useTheme,
+  useTheme
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import HeadingMD from "../../Common/HeadingMD";
 import HeadingXLBold from "../../Common/HeadingXLBold";
 import Subtitle1 from "../../Common/Subtitle1";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
-import { doc, getDoc } from "firebase/firestore";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import IconButton from "@mui/material/IconButton";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import GradientBLACK from "../../Assets/20210113_083213.png";
 import { BookLoaderComponent } from "../../Common/BookLoader";
 import { returnType } from "../../Common/Constants";
 import Serves from "../../Common/Ribbons/Serves";
 import ToggleSwitch from "../../Common/toggle_switch";
 import TopProgress from "../../Common/top_progress";
 import { setSelectedRecipe } from "../../redux/slices/recipeSlice";
-import { getActiveTab, getLoggedUser } from "../../redux/slices/userSlice";
+import {
+  getActiveTab,
+  getIsMobile,
+  setActiveTab
+} from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
 
@@ -38,9 +46,11 @@ const RecipeDetails = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const [liked, setLiked] = useState(false);
   const bpSMd = theme.breakpoints.down("md");
   const id = new URLSearchParams(search).get("id");
-  const loggedUser = useSelector(getLoggedUser);
+  const isMobile = useSelector(getIsMobile);
+  const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
   const activeTab = useSelector(getActiveTab);
   // const { scrollYProgress } = useScroll();
 
@@ -48,8 +58,47 @@ const RecipeDetails = () => {
     // console.log(id);
     if (id) {
       viewRecipe(id);
+      dispatch(setActiveTab(1));
     }
   }, [id]);
+
+  useEffect(() => {
+    if (recipe && recipe.favouritedBy) {
+      console.log(recipe.favouritedBy, loggedUser.uid);
+      let cond = recipe.favouritedBy.includes(loggedUser.uid);
+      console.log(cond);
+      setLiked(cond);
+    }
+  }, [recipe]);
+
+  const handleLikeRecipe = () => {
+    const taskDocRef = doc(db, "recipes", recipe._id);
+    // console.log(taskDocRef, recipe);
+    try {
+      let favourited_by = recipe.favouritedBy;
+      if (liked) {
+        favourited_by = favourited_by.filter((id) => id !== loggedUser.uid);
+      } else {
+        favourited_by = [...favourited_by, loggedUser.uid];
+      }
+      let recipe_obj = {
+        favouritedBy: favourited_by,
+      };
+      updateDoc(taskDocRef, recipe_obj)
+        .then((res) => {
+          // console.log(res);
+          setLiked(!liked);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
+
+  const handleGoBack = () => navigate(-1);
 
   const viewRecipe = (id) => {
     setLoading(true);
@@ -76,13 +125,95 @@ const RecipeDetails = () => {
         <BookLoaderComponent height={"90vh"} />
       ) : (
         <>
-          <Box className="fixed-image" sx={{ width: "100%", height: 250 }}>
+          <Box
+            className="fixed-image"
+            sx={{ width: "100%", height: isMobile ? 300 : 250 }}
+          >
             <img
               src={recipe.finish.imgSrc}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               loading="lazy"
               alt="Recipe Image"
             />
+            <Box
+              sx={{
+                position: "absolute",
+                transform: "rotate(180deg)",
+                top: -150,
+                left: 0,
+                // display: "none",
+                [bpSMd]: { top: -10 },
+              }}
+            >
+              <img
+                style={{
+                  width: "100%",
+                }}
+                alt={"Gradient"}
+                src={GradientBLACK}
+              />
+            </Box>
+            <Tooltip title="Go Back">
+              <IconButton
+                size="large"
+                sx={{
+                  position: "absolute",
+                  top: 5,
+                  left: 5,
+                  backgroundColor: "rgba(0,0,0,0.2) !important",
+                }}
+                onClick={handleGoBack}
+              >
+                <ArrowBackIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Add to favourite">
+              <IconButton
+                size="large"
+                sx={{
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  backgroundColor: "rgba(0,0,0,0.2) !important",
+                }}
+                onClick={(e) => handleLikeRecipe()}
+              >
+                {liked ? (
+                  <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+                ) : (
+                  <FavoriteBorderIcon
+                    sx={{ fontSize: "1.5rem", color: "white" }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+            <Box
+              sx={{
+                position: "absolute",
+                top: 10,
+                left: "50%",
+                transform: "translateX(-50%)",
+              }}
+            >
+              <Stack direction={"row"} spacing={1}>
+                <Stack justifyContent="center" alignItems="center">
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      textTransform: "capitalize",
+                      fontWeight: "bold",
+                      color: "white",
+                      fontFamily: "Poppins, sans-serif !important",
+                    }}
+                  >
+                    {recipe.name}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: "white" }}>
+                    posted on {moment(recipe.createdAt).format("LLL")}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Box>
           </Box>
 
           <Box
@@ -105,39 +236,19 @@ const RecipeDetails = () => {
                   [bpSMd]: { paddingTop: 1 },
                 }}
               >
-                <Grid item md={12} lg={8}>
+                <Grid
+                  item
+                  md={12}
+                  lg={8}
+                  sx={{
+                    width: "100%",
+                  }}
+                >
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     staggerChildren={0.3}
                   >
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      whileInView={{ y: [20, 0], opacity: [0, 1] }}
-                      transition={{ duration: 0.5, ease: "easeInOut" }}
-                    >
-                      <Stack direction={"row"} spacing={1}>
-                        <Avatar src={recipe.photoURL} />
-                        <Stack>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              textTransform: "capitalize",
-                              fontWeight: "bold",
-                              fontFamily: "Poppins, sans-serif !important",
-                            }}
-                          >
-                            {recipe.name}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{ color: grey[600] }}
-                          >
-                            posted on {moment(recipe.createdAt).format("LLL")}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                    </motion.div>
                     <motion.div
                       initial={{ opacity: 0 }}
                       whileInView={{ y: [20, 0], opacity: [0, 1] }}

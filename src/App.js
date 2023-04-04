@@ -25,7 +25,7 @@ function App() {
     if (location.pathname === "/") {
       setShowNav(false);
     } else if (location.pathname.includes("/view")) {
-      setShowNav(!isMobile);
+      setShowNav(false);
     } else {
       setShowNav(true);
     }

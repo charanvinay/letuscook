@@ -15,8 +15,8 @@ function HeadingXLBold(props) {
         letterSpacing: 2,
         color: "text.primary",
         fontFamily: "Product Sans Bold",
-        margin: "20px 0px 5px 0px",
-        [bpSMd]: { fontSize: "35px", margin:"20px 0px 10px 0px" },
+        margin: "0px 0px 5px 0px",
+        [bpSMd]: { fontSize: "35px", margin:"0px 0px 10px 0px" },
       }}
     >
       {props.text}
