@@ -16,7 +16,7 @@ import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import RecipeCard from "../Recipe/recipe_card";
 
-const UserRecipes = () => {
+const UserRecipes = (props) => {
   const [recipesList, setRecipesList] = useState([]);
   const [loadding, setLoadding] = useState(true);
   const loggedUser = useSelector(getLoggedUser);
@@ -43,6 +43,7 @@ const UserRecipes = () => {
         });
         // console.log(recipes);
         setRecipesList([...recipes]);
+        props.recipesData({recipe_count: recipes.length})
       }
     } catch (error) {
       console.log(error);
@@ -61,15 +62,7 @@ const UserRecipes = () => {
   };
   return (
     <Box>
-      {loadding || <Stack
-        sx={{ textAlign: "center", margin: "15px 0px 0px 0px" }}
-        spacing={1}
-      >
-        <Typography variant="body1" sx={{ textTransform: "capitalize" }}>
-          Total Recipes - {recipesList.length}
-        </Typography>
-      </Stack>}
-      <Container maxWidth="lg" sx={{ p: 3 }}>
+      <Container maxWidth="lg" sx={{ paddingY: 4 }}>
         {loadding && (
           <Grid container spacing={{ xs: 6, md: 3 }}>
             {[1, 2, 3, 4, 5, 6].map((loader) => (

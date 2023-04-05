@@ -1,5 +1,6 @@
 import { Box, Button, Container } from "@mui/material";
 import { useTheme } from "@mui/system";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FcGoogle } from "react-icons/fc";
@@ -15,7 +16,7 @@ import { auth, signInWithGoogle } from "../services/firebase";
 function Login() {
   const [user, loading] = useAuthState(auth);
   const [pageLoading, setPageLoading] = useState(false);
-  const [isLoggedin, setIsLoggedin] = useState(false)
+  const [isLoggedin, setIsLoggedin] = useState(false);
   const [loadBackdrop, setLoadBackdrop] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const theme = useTheme();
@@ -30,10 +31,9 @@ function Login() {
       return;
     }
     // console.log(user);
-    if(isLoggedin && user){
-      customSetTimeout("/home")
-    }
-    else if (user) {
+    if (isLoggedin && user) {
+      customSetTimeout("/home");
+    } else if (user) {
       navigate("/home");
     }
     setPageLoading(false);
@@ -55,7 +55,7 @@ function Login() {
   return (
     <>
       {pageLoading ? (
-        <BookLoaderComponent height={"100vh"}/>
+        <BookLoaderComponent height={"100vh"} />
       ) : (
         <Box
           height="100vh"
@@ -68,109 +68,161 @@ function Login() {
             backgroundColor: bgSecondary,
           }}
         >
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: -60,
-              left: -100,
-              width: 200,
-              height: 200,
-              borderRadius: "50%",
-              border: "50px solid " + primary,
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: [0.9, 1] }}
+            transition={{
+              duration: 0.5,
+              ease: "easeInOut",
             }}
-          />
-          <Box
-            sx={{
-              position: "absolute",
-              top: -150,
-              right: -150,
-              width: 400,
-              height: 400,
-              borderRadius: "50%",
-              backgroundColor: primary,
-            }}
-          />
-          <Container maxWidth="md" sx={{ zIndex: 2 }}>
+          >
             <Box
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                backgroundColor: "#fff",
-                boxShadow: "0 0 20px -2px #d1e3fa",
-                [bpXLd]: {
-                  boxShadow: "0 0 20px -16px #000",
-                },
-                [bpSMd]: { boxShadow: "0 0 10px -6px #000" },
+                position: "absolute",
+                bottom: -60,
+                left: -100,
+                width: 200,
+                height: 200,
+                borderRadius: "50%",
+                border: "50px solid " + primary,
               }}
-            >
-              {/* left */}
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: [0.9, 1] }}
+            transition={{
+              duration: 0.5,
+              ease: "easeInOut",
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: -150,
+                right: -150,
+                width: 400,
+                height: 400,
+                borderRadius: "50%",
+                backgroundColor: primary,
+              }}
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ y: [20, 0], opacity: [1] }}
+            transition={{
+              duration: 0.5,
+              ease: "easeInOut",
+            }}
+          >
+            <Container maxWidth="md" sx={{ zIndex: 2 }}>
               <Box
                 sx={{
-                  flex: 1,
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "relative",
-                  padding: "20px",
-                  height: "70vh",
-                  overflow: "hidden",
-                  backgroundColor: primary,
+                  flexDirection: "row",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 0 20px -2px #d1e3fa",
+                  [bpXLd]: {
+                    boxShadow: "0 0 20px -16px #000",
+                  },
+                  [bpSMd]: { boxShadow: "0 0 10px -6px #000" },
                 }}
               >
+                {/* left */}
                 <Box
                   sx={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                    padding: "20px",
+                    height: "70vh",
                     overflow: "hidden",
-                    position: "absolute",
-                    top: -25,
-                    right: -120,
-                    opacity: 0.5,
-                    filter: "invert(100%)",
+                    backgroundColor: primary,
                   }}
                 >
-                  <img src={dotscross} alt={"dotswhite"} width="400px" />
-                </Box>
-
-                <img src={login} alt={"login_image"} width="50%" />
-                <Box sx={{ margin: "20px 0px 10px 0px" }}>
-                  <Button
-                    variant="contained"
-                    fullWidth={true}
-                    onClick={()=>{
-                      const isloggedin = signInWithGoogle();
-                      if(isloggedin){
-                        setIsLoggedin(isloggedin);
-                      }
-                    }}
+                  <Box
                     sx={{
-                      backgroundColor: "white",
-                      color: primary,
-                      fontWeight: "bold",
-                      textTransform: "none",
-                      "&:hover": {
-                        backgroundColor: "white",
-                      },
+                      overflow: "hidden",
+                      position: "absolute",
+                      top: -25,
+                      right: -120,
+                      opacity: 0.5,
+                      filter: "invert(100%)",
                     }}
-                    startIcon={<FcGoogle />}
                   >
-                    Sign In With Google
-                  </Button>
-                </Box>
-                <Box
-                  sx={{
-                    overflow: "hidden",
-                    position: "absolute",
-                    bottom: -70,
-                    left: -10,
-                    opacity: 0.5,
-                    filter: "invert(100%)",
-                  }}
-                >
-                  <img src={dotsb} alt={"dotswhite"} width="200px" />
+                    <img src={dotscross} alt={"dotswhite"} width="400px" />
+                  </Box>
+                  <Box sx={{ width: "50%" }}>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      whileInView={{ scale: [0.5, 1], opacity: [0, 1] }}
+                      transition={{
+                        duration: 0.5,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <img
+                        src={login}
+                        alt={"login_image"}
+                        width="100%"
+                        loading="lazy"
+                      />
+                    </motion.div>
+                  </Box>
+                  <Box sx={{ margin: "20px 0px 10px 0px" }}>
+                  <motion.div
+                      initial={{ opacity: 0 }}
+                      whileInView={{ y: [20, 0], opacity: [0, 1] }}
+                      transition={{
+                        duration: 0.5,
+                        ease: "easeInOut",
+                        delay: 0.5
+                      }}
+                    >
+                    <Button
+                      variant="contained"
+                      fullWidth={true}
+                      onClick={() => {
+                        const isloggedin = signInWithGoogle();
+                        if (isloggedin) {
+                          setIsLoggedin(isloggedin);
+                        }
+                      }}
+                      sx={{
+                        backgroundColor: "white",
+                        color: primary,
+                        fontWeight: "bold",
+                        textTransform: "none",
+                        "&:hover": {
+                          backgroundColor: "white",
+                        },
+                      }}
+                      startIcon={<FcGoogle />}
+                    >
+                      Sign In With Google
+                    </Button>
+                      </motion.div>
+                  </Box>
+                  <Box
+                    sx={{
+                      overflow: "hidden",
+                      position: "absolute",
+                      bottom: -70,
+                      left: -10,
+                      opacity: 0.5,
+                      filter: "invert(100%)",
+                    }}
+                  >
+                    <img src={dotsb} alt={"dotswhite"} width="200px" />
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          </Container>
+            </Container>
+          </motion.div>
           <CustomBackdrop loading={loadBackdrop} />
         </Box>
       )}
