@@ -82,112 +82,77 @@ const Profile = () => {
                 "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
             }}
           >
-            <Stack
-              // spacing={2}
-              alignItems="center"
-              flexDirection="row"
-              justifyContent="center"
-              sx={{
-                [bpSMd]: {
-                  justifyContent: "space-around",
-                },
-              }}
-            >
+            <Stack sx={{ textAlign: "center" }} spacing={1} alignItems="center">
               <motion.div
                 initial={{ opacity: 0 }}
-                whileInView={{ scale: [0, 1], opacity: [0, 1] }}
+                whileInView={{ y: [20, 0], opacity: [0, 1] }}
                 transition={{
                   duration: 0.6,
                   ease: "easeInOut",
                   delay: 0.5,
                 }}
               >
-                <Box sx={{ position: "relative" }}>
-                  <Avatar
-                    alt={loggedUser.name}
-                    src={loggedUser.photoURL || "/static/images/avatar/1.jpg"}
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      boxShadow: "0px 1px 30px rgba(0, 0, 0, 0.26)",
-                    }}
-                  />
-                </Box>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    textTransform: "uppercase",
+                    letterSpacing: "0.14em",
+                    fontWeight: "bold",
+                    color: "white",
+                    [bpSMd]: {
+                      fontSize: "25px",
+                    },
+                  }}
+                >
+                  {loggedUser.name}
+                </Typography>
               </motion.div>
-              <Stack
-                sx={{ textAlign: "center", marginLeft: 4 }}
-                spacing={1}
-                alignItems="center"
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ y: [20, 0], opacity: [0, 1] }}
+                transition={{
+                  duration: 0.6,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
               >
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ y: [20, 0], opacity: [0, 1] }}
-                  transition={{
-                    duration: 0.6,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  }}
-                >
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      textTransform: "capitalize",
-                      color: "white",
-                      [bpSMd]: {
-                        fontSize: "25px",
-                      },
-                    }}
-                  >
-                    {loggedUser.name}
-                  </Typography>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ y: [20, 0], opacity: [0, 1] }}
-                  transition={{
-                    duration: 0.6,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  }}
-                >
-                  <Stack direction="row" justifyContent="center" spacing={2}>
-                    <Stack>
-                      <Typography
-                        variant="body1"
-                        sx={{ textTransform: "capitalize", color: "white" }}
-                      >
-                        Recipes
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ textTransform: "capitalize", color: "white" }}
-                      >
-                        {recipesCount}
-                      </Typography>
-                    </Stack>
-                    <Divider
-                      orientation="vertical"
-                      variant="middle"
-                      flexItem
-                      sx={{ borderColor: "rgba(255, 255, 255,0.1)" }}
-                    />
-                    <Stack>
-                      <Typography
-                        variant="body1"
-                        sx={{ textTransform: "capitalize", color: "white" }}
-                      >
-                        Favourites
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ textTransform: "capitalize", color: "white" }}
-                      >
-                        {favouritesCount}
-                      </Typography>
-                    </Stack>
+                <Stack direction="row" justifyContent="center" spacing={2}>
+                  <Stack>
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize", color: "white" }}
+                    >
+                      Recipes
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize", color: "white" }}
+                    >
+                      {recipesCount}
+                    </Typography>
                   </Stack>
-                </motion.div>
-              </Stack>
+                  <Divider
+                    orientation="vertical"
+                    variant="middle"
+                    flexItem
+                    sx={{ borderColor: "rgba(255, 255, 255,0.1)" }}
+                  />
+                  <Stack>
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize", color: "white" }}
+                    >
+                      Favourites
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ textTransform: "capitalize", color: "white" }}
+                    >
+                      {favouritesCount}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </motion.div>
             </Stack>
             <Box
               sx={{
