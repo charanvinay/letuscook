@@ -125,17 +125,18 @@ const RecipeDetails = () => {
         <BookLoaderComponent height={"90vh"} />
       ) : (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ y: [-5, 0], opacity: [1] }}
-            transition={{
-              duration: 0.5,
-              ease: "easeInOut",
-            }}
+          <Box
+            className="fixed-image"
+            sx={{ width: "100%", height: isMobile ? 300 : 250 }}
           >
-            <Box
-              className="fixed-image"
-              sx={{ width: "100%", height: isMobile ? 300 : 250 }}
+            <motion.div
+              initial={{ opacity: 0 }}
+              style={{ height: "100%", width: "100%" }}
+              whileInView={{ y: [-5, 0], opacity: [1] }}
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+              }}
             >
               <img
                 src={recipe.finish.imgSrc}
@@ -143,88 +144,89 @@ const RecipeDetails = () => {
                 loading="lazy"
                 alt="Recipe Image"
               />
-              <Box
-                sx={{
-                  position: "absolute",
-                  transform: "rotate(180deg)",
-                  top: -150,
-                  left: 0,
-                  // display: "none",
-                  [bpSMd]: { top: -10 },
+            </motion.div>
+            <Box
+              sx={{
+                position: "absolute",
+                transform: "rotate(180deg)",
+                top: -150,
+                left: 0,
+                // display: "none",
+                [bpSMd]: { top: -10 },
+              }}
+            >
+              <img
+                style={{
+                  width: "100%",
                 }}
-              >
-                <img
-                  style={{
-                    width: "100%",
-                  }}
-                  alt={"Gradient"}
-                  loading="lazy"
-                  src={GradientBLACK}
-                />
-              </Box>
-              <Tooltip title="Go Back">
-                <IconButton
-                  size="large"
-                  sx={{
-                    position: "absolute",
-                    top: 5,
-                    left: 5,
-                    backgroundColor: "rgba(0,0,0,0.2) !important",
-                  }}
-                  onClick={handleGoBack}
-                >
-                  <ArrowBackIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Add to favourite">
-                <IconButton
-                  size="large"
-                  sx={{
-                    position: "absolute",
-                    top: 5,
-                    right: 5,
-                    backgroundColor: "rgba(0,0,0,0.2) !important",
-                  }}
-                  onClick={(e) => handleLikeRecipe()}
-                >
-                  {liked ? (
-                    <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-                  ) : (
-                    <FavoriteBorderIcon
-                      sx={{ fontSize: "1.5rem", color: "white" }}
-                    />
-                  )}
-                </IconButton>
-              </Tooltip>
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 10,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                }}
-              >
-                <Stack direction={"row"} spacing={1}>
-                  <Stack justifyContent="center" alignItems="center">
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        textTransform: "capitalize",
-                        fontWeight: "bold",
-                        color: "white",
-                        fontFamily: "Poppins, sans-serif !important",
-                      }}
-                    >
-                      {recipe.name}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: "white" }}>
-                      {moment(recipe.createdAt).format("LLL")}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Box>
+                alt={"Gradient"}
+                loading="lazy"
+                src={GradientBLACK}
+              />
             </Box>
-          </motion.div>
+            <Tooltip title="Go Back">
+              <IconButton
+                size="large"
+                sx={{
+                  position: "absolute",
+                  top: 5,
+                  left: 5,
+                  backgroundColor: "rgba(0,0,0,0.2) !important",
+                }}
+                onClick={handleGoBack}
+              >
+                <ArrowBackIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Add to favourite">
+              <IconButton
+                size="large"
+                sx={{
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  backgroundColor: "rgba(0,0,0,0.2) !important",
+                }}
+                onClick={(e) => handleLikeRecipe()}
+              >
+                {liked ? (
+                  <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+                ) : (
+                  <FavoriteBorderIcon
+                    sx={{ fontSize: "1.5rem", color: "white" }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+            <Box
+              sx={{
+                position: "absolute",
+                top: 10,
+                left: "50%",
+                transform: "translateX(-50%)",
+              }}
+            >
+              <Stack direction={"row"} spacing={1}>
+                <Stack justifyContent="center" alignItems="center">
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      textTransform: "capitalize",
+                      fontWeight: "bold",
+                      color: "white",
+                      fontFamily: "Poppins, sans-serif !important",
+                    }}
+                  >
+                    {recipe.name}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: "white" }}>
+                    {moment(recipe.createdAt).format("LLL")}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Box>
+          </Box>
+
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ y: [20, 0], opacity: [1] }}

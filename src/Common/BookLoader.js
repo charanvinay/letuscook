@@ -17,7 +17,7 @@ export const BookLoaderComponent = (props) => {
         sx={{
           width: "10%",
           [bpSMd]: {
-            width: "40%",
+            width: "30%",
           },
         }}
       >
