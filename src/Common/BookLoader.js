@@ -1,23 +1,28 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 // import { BookLoader } from "react-awesome-loaders";
-import { primary, primaryLight } from "./Pallete";
+import CTSMLoader from "../Assets/GIFS/bluemix.gif";
 export const BookLoaderComponent = (props) => {
+  const theme = useTheme();
+  const bpSMd = theme.breakpoints.down("sm");
   return (
     <Box
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: props.height,
+        height: "100dvh",
       }}
     >
-      {/* <BookLoader
-        background={`linear-gradient(135deg, ${primaryLight}, ${primary})`}
-        desktopSize={"40px"}
-        mobileSize={"20px"}
-        text=""
-      /> */}
-       <CircularProgress />
+      <Box
+        sx={{
+          width: "10%",
+          [bpSMd]: {
+            width: "40%",
+          },
+        }}
+      >
+        <img src={CTSMLoader} alt="Loader" width="100%" />
+      </Box>
     </Box>
   );
 };
