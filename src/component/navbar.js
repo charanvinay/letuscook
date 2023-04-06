@@ -16,8 +16,12 @@ import { useNavigate } from "react-router-dom";
 import { primary } from "../Common/Pallete";
 import { getLoggedUser, handleLoggedUser } from "../redux/slices/userSlice";
 import { auth, logOut } from "../services/firebase";
+import { Stack } from "@mui/material";
 
-const pages = [{ id: 1, tooltip: "Home", route: "/home" }, { id: 2, tooltip: "Favourites", route: "/favourites" }];
+const pages = [
+  { id: 1, tooltip: "Home", route: "/home" },
+  { id: 2, tooltip: "Favourites", route: "/favourites" },
+];
 const settings = ["Profile", "Logout"];
 
 function Navbar() {
@@ -65,74 +69,81 @@ function Navbar() {
   return (
     <AppBar className="app__navbar" elevation={0}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/home"
-            sx={{
-              mr: 2,
-              display: { xs: "flex" },
-              flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: ".1rem",
-              color: primary,
-              textDecoration: "none",
-            }}
-          >
-            LetUsCook
-          </Typography>
-          <Box
-            sx={{
-              display: { md: "flex" },
-              justifyContent: "end",
-              marginRight: "6px"
-            }}
-          >
-            {pages.map((page) => (
-              <Tooltip title={page.tooltip} key={page.tooltip}>
-                <IconButton
-                  size="large"
-                  onClick={() => navigate(page.route)}
-                >
-                  {page.id===2 && <FavoriteBorderIcon alt={page.tooltip} sx={{color: primary}} />}
+        <Toolbar
+          disableGutters
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{
+                mr: 2,
+                flexGrow: 1,
+                fontWeight: 700,
+                letterSpacing: ".1rem",
+                cursor: "pointer",
+                color: primary,
+                textDecoration: "none",
+              }}
+              onClick={() => navigate("/home")}
+            >
+              LetUsCook
+            </Typography>
+          </Box>
+          <Stack direction="row">
+            <Box
+              sx={{
+                display: { md: "flex" },
+                justifyContent: "end",
+                marginRight: "6px",
+              }}
+            >
+              {pages.map((page) => (
+                <Tooltip title={page.tooltip} key={page.tooltip}>
+                  <IconButton size="large" onClick={() => navigate(page.route)}>
+                    {page.id === 2 && (
+                      <FavoriteBorderIcon
+                        alt={page.tooltip}
+                        sx={{ color: primary }}
+                      />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              ))}
+            </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={"User Image"} src={loggedUser.photoURL} />
                 </IconButton>
               </Tooltip>
-            ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={"User Image"} src={loggedUser.photoURL} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => handleCloseUserMenu(setting)}
-                >
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleCloseUserMenu(setting)}
+                  >
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Stack>
         </Toolbar>
       </Container>
     </AppBar>
