@@ -154,7 +154,7 @@ function Login() {
                       filter: "invert(100%)",
                     }}
                   >
-                    <img src={dotscross} alt={"dotswhite"} width="400px" />
+                    <img src={dotscross} alt={"dotswhite"} width="400px" loading="lazy"/>
                   </Box>
                   <Box sx={{ width: "50%" }}>
                     <motion.div
@@ -217,7 +217,7 @@ function Login() {
                       filter: "invert(100%)",
                     }}
                   >
-                    <img src={dotsb} alt={"dotswhite"} width="200px" />
+                    <img src={dotsb} alt={"dotswhite"} width="200px" loading="lazy"/>
                   </Box>
                 </Box>
               </Box>

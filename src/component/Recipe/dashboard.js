@@ -270,6 +270,7 @@ const Dashboard = () => {
             src={NoData}
             style={{ width: "150px", height: "150px" }}
             alt="No data"
+            loading="lazy"
           />
           <Typography
             variant="body2"

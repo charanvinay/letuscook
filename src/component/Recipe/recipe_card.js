@@ -207,6 +207,7 @@ const RecipeCard = (props) => {
               width: "100%",
             }}
             alt={"Gradient"}
+            loading="lazy"
             src={GradientBLACK}
           />
         </Card>

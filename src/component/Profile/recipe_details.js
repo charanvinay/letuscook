@@ -150,6 +150,7 @@ const RecipeDetails = () => {
                   width: "100%",
                 }}
                 alt={"Gradient"}
+                loading="lazy"
                 src={GradientBLACK}
               />
             </Box>
