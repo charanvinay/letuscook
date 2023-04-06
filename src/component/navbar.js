@@ -17,6 +17,8 @@ import { primary } from "../Common/Pallete";
 import { getLoggedUser, handleLoggedUser } from "../redux/slices/userSlice";
 import { auth, logOut } from "../services/firebase";
 import { Stack } from "@mui/material";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const pages = [
   { id: 1, tooltip: "Home", route: "/home" },
@@ -118,7 +120,8 @@ function Navbar() {
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: "45px" }}
+              
+                sx={{ mt: "40px", boxShadow:"0px 1px 2px rgb(23 110 222 / 5%)" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
@@ -137,8 +140,10 @@ function Navbar() {
                   <MenuItem
                     key={setting}
                     onClick={() => handleCloseUserMenu(setting)}
+                    sx={{display: "flex", alignItems: "center"}}
                   >
-                    <Typography textAlign="center">{setting}</Typography>
+                    {setting=="Profile" ? <AccountCircleIcon sx={{color:primary}} />:<LogoutIcon sx={{color:primary}}/>}
+                    <Typography textAlign="center" sx={{ml:1}}>{setting} </Typography>
                   </MenuItem>
                 ))}
               </Menu>
