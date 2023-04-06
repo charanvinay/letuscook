@@ -1,27 +1,25 @@
+import AddIcon from "@mui/icons-material/Add";
 import {
   Avatar,
   Box,
   Card,
   Container,
+  Divider,
   Fab,
   Stack,
   Typography,
   useTheme,
 } from "@mui/material";
 import React, { useEffect } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import { useNavigate } from "react-router-dom";
-import UserRecipes from "./user_recipes";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getLoggedUser } from "../../redux/slices/userSlice";
+import UserRecipes from "./user_recipes";
 // import TopCover from "../../Assets/coverblack.jpg";
-import TopCover from "../../Assets/coverslate.jpg";
-import { bgBody, primary } from "../../Common/Pallete";
-import { useState } from "react";
 import { collection, getDocs, query } from "firebase/firestore";
-import { db } from "../../services/firebase";
 import { motion } from "framer-motion";
-import RightImg from "../../Assets/vegetables.png";
+import { useState } from "react";
+import { db } from "../../services/firebase";
 // import RightImg from "../../Assets/chicken.png";
 // import RightImg from "../../Assets/slicer.png";
 
@@ -76,8 +74,10 @@ const Profile = () => {
               alignItems: "center",
               justifyContent: "center",
               minHeight: "100px",
+              // backgroundImage:
+              //   "linear-gradient(25deg, #142374, #1922a0, #1a1ccf, #150bff)",
               backgroundImage:
-                "linear-gradient(25deg, #142374, #1922a0, #1a1ccf, #150bff)",
+                "linear-gradient(25deg, #0012d9, #1c43e6, #1f67f2, #0489ff)",
               boxShadow:
                 "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
             }}
@@ -89,7 +89,7 @@ const Profile = () => {
               justifyContent="center"
               sx={{
                 [bpSMd]: {
-                  justifyContent:"space-around",
+                  justifyContent: "space-around",
                 },
               }}
             >
@@ -115,10 +115,9 @@ const Profile = () => {
                 </Box>
               </motion.div>
               <Stack
-                sx={{ textAlign: "center",marginLeft:4}}
+                sx={{ textAlign: "center", marginLeft: 4 }}
                 spacing={1}
                 alignItems="center"
-                
               >
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -166,6 +165,12 @@ const Profile = () => {
                         {recipesCount}
                       </Typography>
                     </Stack>
+                    <Divider
+                      orientation="vertical"
+                      variant="middle"
+                      flexItem
+                      sx={{ borderColor: "rgba(255, 255, 255,0.2)" }}
+                    />
                     <Stack>
                       <Typography
                         variant="body1"
@@ -186,26 +191,26 @@ const Profile = () => {
             </Stack>
             <Box
               sx={{
-                overflow: "hidden",
                 position: "absolute",
-                bottom: -30,
-                right: -30,
-                opacity: 0.1,
-                width: "150px",
-                [bpSMd]: {
-                  width: "150px",
-                  bottom: -50,
-                },
+                top: -70,
+                left: -100,
+                width: 150,
+                height: 150,
+                borderRadius: "50%",
+                border: "30px solid rgba(255, 255, 255,0.1)",
               }}
-            >
-              <img
-                src={RightImg}
-                alt={"RightBorderIMG"}
-                width="100%"
-                height="100%"
-                loading="lazy"
-              />
-            </Box>
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: -40,
+                right: -40,
+                width: 150,
+                height: 150,
+                borderRadius: "50%",
+                backgroundColor: "rgba(255, 255, 255,0.1)",
+              }}
+            />
           </Card>
         </Container>
 
