@@ -14,22 +14,7 @@ import { store } from "./redux/store";
 
 function App() {
   const location = useLocation();
-  const isMobile = window.innerWidth < 800;
-  const [showNav, setShowNav] = useState(true);
-
-  useEffect(() => {
-    handleShownav();
-  }, [location.pathname]);
-
-  const handleShownav = () => {
-    if (location.pathname === "/") {
-      setShowNav(false);
-    } else if (location.pathname.includes("/view")) {
-      setShowNav(false);
-    } else {
-      setShowNav(true);
-    }
-  };
+  const showNav = !["/", "/view"].includes(location.pathname)
 
   return (
     <ThemeProvider theme={theme}>
