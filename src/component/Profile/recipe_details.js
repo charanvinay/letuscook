@@ -455,25 +455,7 @@ const RecipeDetails = () => {
                     </motion.div>
                   </Grid>
                   <Grid item xs={12} lg={4}>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      whileInView={{ y: [20, 0], opacity: [0, 1] }}
-                      transition={{
-                        duration: 0.5,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <Paper
-                        sx={{
-                          borderRadius: "8px",
-                          padding: "10px",
-                          overflow: "hidden",
-                          boxShadow: "0px 1px 8px rgb(23 110 222 / 10%)",
-                        }}
-                      >
-                        <OtherRecipes uid={recipe.uid} name={recipe.name} />
-                      </Paper>
-                    </motion.div>
+                    <OtherRecipes id={id} uid={recipe.uid} name={recipe.name} />
                   </Grid>
                 </Grid>
                 <Box

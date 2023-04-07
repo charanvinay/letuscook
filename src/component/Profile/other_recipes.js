@@ -1,4 +1,4 @@
-import { Avatar, Divider, ListItemAvatar } from "@mui/material";
+import { Avatar, Divider, ListItemAvatar, Paper } from "@mui/material";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -8,8 +8,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListItem from "../../Common/Skeletons/ListItem";
 import { db } from "../../services/firebase";
+import { motion } from "framer-motion";
 
-export default function OtherRecipes({ uid, name }) {
+export default function OtherRecipes({ id, uid, name }) {
   const [loadding, setLoadding] = useState(true);
   const [recipesList, setRecipesList] = useState([]);
   const navigate = useNavigate();
@@ -29,9 +30,11 @@ export default function OtherRecipes({ uid, name }) {
       if (user_docs.docs.length > 0) {
         let recipes = [];
         user_docs.docs.map((doc) => {
-          recipes.push({ _id: doc.id, ...doc.data() });
+          if (doc.id != id) {
+            recipes.push({ _id: doc.id, ...doc.data() });
+          }
         });
-        // console.log(recipes);
+        console.log(recipes);
         setRecipesList([...recipes]);
       }
     } catch (error) {
@@ -41,46 +44,74 @@ export default function OtherRecipes({ uid, name }) {
   };
 
   return (
-    <List
-      sx={{ width: "100%" }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader
-          component="div"
-          id="nested-list-subheader"
-          sx={{
-            textTransform: "capitalize",
+    <>
+      {recipesList.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ y: [20, 0], opacity: [0, 1] }}
+          transition={{
+            duration: 0.5,
+            ease: "easeInOut",
           }}
         >
-          Other recipes of {name}
-        </ListSubheader>
-      }
-    >
-      {loadding ? (
-        [1, 2].map((loader) => <div key={loader}><ListItem key={loader} /></div>)
-      ) : (
-        <>
-          {recipesList.map((recipe, ind) => {
-            return (
-              <div key={ind}>
-                <ListItemButton
-                  onClick={() => navigate(`/view?id=${recipe._id}`)}
+          <Paper
+            sx={{
+              borderRadius: "8px",
+              padding: "24px",
+              overflow: "hidden",
+              boxShadow: "0px 1px 8px rgb(23 110 222 / 10%)",
+            }}
+          >
+            <List
+              sx={{ width: "100%" }}
+              component="nav"
+              aria-labelledby="nested-list-subheader"
+              subheader={
+                <ListSubheader
+                  component="div"
+                  id="nested-list-subheader"
+                  sx={{
+                    textTransform: "capitalize",
+                    lineHeight: 1.6,
+                    padding: 0,
+                  }}
                 >
-                  <ListItemAvatar>
-                    <Avatar src={recipe.finish.imgSrc} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={recipe.title}
-                    secondary={`${recipe.type} | Serves - ${recipe.serves}`}
-                  />
-                </ListItemButton>
-                {recipesList.length - 1 !== ind && <Divider />}
-              </div>
-            );
-          })}
-        </>
+                  Other recipes of {name}
+                </ListSubheader>
+              }
+            >
+              {loadding ? (
+                [1, 2].map((loader) => (
+                  <div key={loader}>
+                    <ListItem key={loader} />
+                  </div>
+                ))
+              ) : (
+                <>
+                  {recipesList.map((recipe, ind) => {
+                    return (
+                      <div key={ind}>
+                        <ListItemButton
+                          onClick={() => navigate(`/view?id=${recipe._id}`)}
+                        >
+                          <ListItemAvatar>
+                            <Avatar src={recipe.finish.imgSrc} />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={recipe.title}
+                            secondary={`${recipe.type} | Serves - ${recipe.serves}`}
+                          />
+                        </ListItemButton>
+                        {recipesList.length - 1 !== ind && <Divider />}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </List>
+          </Paper>
+        </motion.div>
       )}
-    </List>
+    </>
   );
 }
