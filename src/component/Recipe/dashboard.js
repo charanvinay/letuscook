@@ -51,15 +51,6 @@ const Dashboard = () => {
   const [serves, setServes] = useState(filtersState.serves);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (loading) {
-  //     return;
-  //   }
-  //   if (user) {
-  //     getUserRecipes();
-  //   }
-  // }, [user, loading]);
-
   const getUserRecipes = async () => {
     setRecipesList([]);
     setLoadding(true);
@@ -71,10 +62,8 @@ const Dashboard = () => {
           "array-contains",
           filtersState.searchText?.toLowerCase()
         )
-        // orderBy("type"),
       );
       let user_docs = await getDocs(user_ref);
-      // console.log(user_docs.docs);
       if (user_docs.docs.length > 0) {
         let recipes = [];
         user_docs.docs.map((doc) => {
@@ -97,15 +86,23 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    getUserRecipes();
-  }, [filtersState.searchText]);
+  // useMemo(() => {
+  //   getUserRecipes();
+  // }, [filtersState.searchText]);
 
   useEffect(() => {
     if (!showFiltersModal) {
       getUserRecipes();
     }
   }, [showFiltersModal, filtersState.type, filtersState.serves]);
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      console.log(filtersState.searchText);
+      getUserRecipes();
+    }, 400);
+    return () => clearTimeout(debounceTimer);
+  }, [filtersState.searchText]);
 
   const handleFiltersModalClose = () => {
     handleResetType();
@@ -169,6 +166,9 @@ const Dashboard = () => {
             placeholder="Search Recipe"
             inputProps={{ "aria-label": "search recipe" }}
             value={filtersState.searchText}
+            onKeyUp={(e) => {
+              dispatch(setSearchText({ searchText: e.target.value }));
+            }}
             onChange={(e) => {
               e.preventDefault();
               // console.log(e.target.value);
