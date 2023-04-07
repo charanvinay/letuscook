@@ -1,58 +1,24 @@
-import CloseIcon from "@mui/icons-material/Close";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import SearchIcon from "@mui/icons-material/Search";
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  Dialog,
-  Grid,
-  IconButton,
-  InputBase,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import NoData from "../../Assets/no_data_found.svg";
-import { recipeServes, recipeTypes } from "../../Common/Constants";
 import HeadingLGBlue from "../../Common/HeadingLGBlue";
-import HeadingMD from "../../Common/HeadingMD";
+import SearchComp from "../../Common/SearchComp";
 import RecipeCardSkeleton from "../../Common/Skeletons/RecipeCard";
-import {
-  getFiltersState,
-  setIsFiltersApplied,
-  setRecipeServes,
-  setRecipeType,
-  setSearchText,
-} from "../../redux/slices/filtersSlice";
+import { getFiltersState } from "../../redux/slices/filtersSlice";
 import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import RecipeCard from "./recipe_card";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Dashboard = () => {
+const Dashboard = (props) => {
   const [recipesList, setRecipesList] = useState([]);
   const [loadding, setLoadding] = useState(true);
-  const [showFiltersModal, setShowFiltersModal] = useState(false);
   const filtersState = useSelector(getFiltersState);
-  const [type, setType] = useState(filtersState.type);
-  const [serves, setServes] = useState(filtersState.serves);
   const loggedUser = useSelector(getLoggedUser);
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const getUserRecipes = async () => {
@@ -78,8 +44,16 @@ const Dashboard = () => {
             if (data.favouritedBy.includes(loggedUser.uid)) {
               recipes.push({ _id: doc.id, ...data });
             }
+          } else if (location.pathname == "/profile") {
+            let data = doc.data();
+            if (data.uid == loggedUser.uid) {
+              recipes.push({ _id: doc.id, ...data });
+            }
           }
         });
+        if (location.pathname == "/profile") {
+          props.recipesData({ recipe_count: recipes.length });
+        }
         if (filtersState.type) {
           recipes = recipes.filter((dtype) => dtype.type === filtersState.type);
         }
@@ -97,77 +71,9 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    if (loggedUser) {
-      handleFiltersModalClose();
-      getUserRecipes();
-    }
-  }, [location.pathname, loggedUser]);
-
-  useEffect(() => {
-    if (!showFiltersModal) {
-      getUserRecipes();
-    }
-  }, [showFiltersModal, filtersState.type, filtersState.serves]);
-
-  useEffect(() => {
-    let debounceTimer;
-    if (filtersState.searchText == "") {
-      getUserRecipes();
-    } else {
-      debounceTimer = setTimeout(() => {
-        console.log(filtersState.searchText);
-        getUserRecipes();
-      }, 400);
-    }
-    return () => clearTimeout(debounceTimer);
-  }, [filtersState.searchText]);
-
-  const handleFiltersModalClose = () => {
-    handleResetType();
-    handleResetServes();
-    setShowFiltersModal(false);
-    dispatch(setIsFiltersApplied({ isFiltersApplied: false }));
-  };
-
-  const handleFiltersModalApply = () => {
-    setShowFiltersModal(false);
-    setType(filtersState.type);
-    setServes(filtersState.serves);
-    dispatch(setIsFiltersApplied({ isFiltersApplied: true }));
-  };
-
-  const handleResetType = () => {
-    setType(null);
-    dispatch(setRecipeType({ type: null }));
-  };
-  const handleResetServes = () => {
-    setServes(null);
-    dispatch(setRecipeServes({ serves: null }));
-  };
-
   return (
     <Container maxWidth="lg" sx={{ paddingX: 3, paddingY: 4 }}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: [0, 1] }}
-        transition={{
-          duration: 0.5,
-          ease: "easeInOut",
-        }}
-      >
-        <HeadingLGBlue
-          text1="Explore"
-          text2={
-            location.pathname == "/home"
-              ? "Recipes"
-              : location.pathname == "/favourites"
-              ? "Favourites"
-              : ""
-          }
-        />
-      </motion.div>
-      <Stack spacing={2} sx={{ marginY: 2 }}>
+      {location.pathname != "/profile" && (
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: [0, 1] }}
@@ -176,87 +82,19 @@ const Dashboard = () => {
             ease: "easeInOut",
           }}
         >
-          <Paper
-            component="form"
-            elevation={0}
-            sx={{
-              p: "2px 4px",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-              <SearchIcon />
-            </IconButton>
-            <InputBase
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Search Recipe"
-              inputProps={{ "aria-label": "search recipe" }}
-              value={filtersState.searchText}
-              onKeyUp={(e) => {
-                dispatch(setSearchText({ searchText: e.target.value }));
-              }}
-              onChange={(e) => {
-                e.preventDefault();
-                // console.log(e.target.value);
-                dispatch(setSearchText({ searchText: e.target.value }));
-              }}
-            />
-            {filtersState.searchText && (
-              <IconButton
-                type="button"
-                sx={{ p: "10px" }}
-                aria-label="search"
-                onClick={() => dispatch(setSearchText({ searchText: "" }))}
-              >
-                <CloseIcon />
-              </IconButton>
-            )}
-          </Paper>
+          <HeadingLGBlue
+            text1="Explore"
+            text2={
+              location.pathname == "/home"
+                ? "Recipes"
+                : location.pathname == "/favourites"
+                ? "Favourites"
+                : ""
+            }
+          />
         </motion.div>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          {filtersState.isFiltersApplied && (
-            <Stack direction="row" spacing={1}>
-              {Boolean(type) && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ scale: [0, 1], opacity: [0, 1] }}
-                  transition={{
-                    duration: 0.4,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <Chip label={type} onDelete={handleResetType} />
-                </motion.div>
-              )}
-              {Boolean(serves) && (
-                <Chip
-                  label={`Serves - ${serves}`}
-                  onDelete={handleResetServes}
-                />
-              )}
-            </Stack>
-          )}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <Button
-              sx={{ alignItems: "start" }}
-              startIcon={<FilterListIcon />}
-              onClick={() => {
-                setShowFiltersModal(true);
-              }}
-            >
-              Filter
-            </Button>
-          </Box>
-        </Box>
-      </Stack>
+      )}
+      <SearchComp getUserRecipes={getUserRecipes} />
       {loadding ? (
         <Grid container spacing={{ xs: 6, md: 3 }}>
           {[1, 2, 3].map((loader) => (
@@ -307,67 +145,6 @@ const Dashboard = () => {
           </Typography>
         </Box>
       )}
-      <Dialog
-        open={showFiltersModal}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleFiltersModalClose}
-        aria-describedby="filters-dialog"
-      >
-        <DialogTitle>Select required filter</DialogTitle>
-        <DialogContent>
-          <HeadingMD text={"RECIPE TYPE"} width={70} />
-          <Stack direction="row" flexWrap="wrap" gap={1}>
-            {recipeTypes.map((type, ind) =>
-              filtersState.type === type ? (
-                <Chip
-                  label={type}
-                  key={ind}
-                  color="primary"
-                  sx={{ fontFamily: "Poppins, sans-serif !important" }}
-                  onClick={() => dispatch(setRecipeType({ type: type }))}
-                />
-              ) : (
-                <Chip
-                  label={type}
-                  key={ind}
-                  variant="outlined"
-                  sx={{ fontFamily: "Poppins, sans-serif !important" }}
-                  onClick={() => dispatch(setRecipeType({ type: type }))}
-                />
-              )
-            )}
-          </Stack>
-          <HeadingMD text={"SERVES"} width={70} />
-          <Stack direction="row" flexWrap="wrap" gap={1}>
-            {recipeServes.map((serve, ind) =>
-              filtersState.serves === serve ? (
-                <Chip
-                  label={serve}
-                  key={ind}
-                  color="primary"
-                  disabled={!filtersState.type}
-                  sx={{ fontFamily: "Poppins, sans-serif !important" }}
-                  onClick={() => dispatch(setRecipeServes({ serves: serve }))}
-                />
-              ) : (
-                <Chip
-                  label={serve}
-                  key={ind}
-                  variant="outlined"
-                  disabled={!filtersState.type}
-                  sx={{ fontFamily: "Poppins, sans-serif !important" }}
-                  onClick={() => dispatch(setRecipeServes({ serves: serve }))}
-                />
-              )
-            )}
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleFiltersModalClose}>Clear</Button>
-          <Button onClick={handleFiltersModalApply}>Apply</Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 };

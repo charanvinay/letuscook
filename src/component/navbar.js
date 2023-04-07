@@ -65,6 +65,7 @@ function Navbar() {
       logOut();
       localStorage.removeItem("loggedUser");
     }
+    dispatch(setSearchText({ searchText: "" }));
     setAnchorElUser(null);
   };
 

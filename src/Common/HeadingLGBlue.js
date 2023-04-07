@@ -6,7 +6,13 @@ function HeadingLGBlue(props) {
   const theme = useTheme();
   const bpSMd = theme.breakpoints.down("sm"); //max-width:599.95px
   return (
-    <Stack direction='row' spacing={1} justifyContent="center" alignItems="center">
+    <Stack
+      direction="row"
+      spacing={1}
+      justifyContent="center"
+      alignItems="center"
+      sx={{ marginBottom: 3 }}
+    >
       <Typography
         // gutterBottom
         variant="h1"
@@ -35,7 +41,6 @@ function HeadingLGBlue(props) {
       >
         {props.text2}
       </Typography>
-      
     </Stack>
   );
 }

@@ -1,6 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
 import {
-  Avatar,
   Box,
   Card,
   Container,
@@ -14,12 +13,12 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getLoggedUser } from "../../redux/slices/userSlice";
-import UserRecipes from "./user_recipes";
 // import TopCover from "../../Assets/coverblack.jpg";
 import { collection, getDocs, query } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { db } from "../../services/firebase";
+import Dashboard from "../Recipe/dashboard";
 // import RightImg from "../../Assets/chicken.png";
 // import RightImg from "../../Assets/slicer.png";
 
@@ -178,13 +177,13 @@ const Profile = () => {
             />
           </Card>
         </Container>
-
-        <UserRecipes
+        <Dashboard
           recipesData={(e) => {
             console.log(e);
             setRecipesCount(e.recipe_count);
           }}
         />
+
         <Fab
           color="primary"
           aria-label="add"
