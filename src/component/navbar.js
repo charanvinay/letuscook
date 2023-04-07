@@ -22,7 +22,6 @@ import { getLoggedUser, handleLoggedUser } from "../redux/slices/userSlice";
 import { auth, logOut } from "../services/firebase";
 
 const pages = [
-  { id: 1, tooltip: "Home", route: "/home" },
   { id: 2, tooltip: "Favourites", route: "/favourites" },
 ];
 const settings = ["Profile", "Logout"];
