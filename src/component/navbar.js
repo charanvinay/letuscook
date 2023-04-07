@@ -1,4 +1,7 @@
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Stack } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -14,11 +17,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { primary } from "../Common/Pallete";
+import { setSearchText } from "../redux/slices/filtersSlice";
 import { getLoggedUser, handleLoggedUser } from "../redux/slices/userSlice";
 import { auth, logOut } from "../services/firebase";
-import { Stack } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
 
 const pages = [
   { id: 1, tooltip: "Home", route: "/home" },
@@ -87,7 +88,10 @@ function Navbar() {
                 color: primary,
                 textDecoration: "none",
               }}
-              onClick={() => navigate("/home")}
+              onClick={() => {
+                dispatch(setSearchText({ searchText: "" }));
+                navigate("/home");
+              }}
             >
               LetUsCook
             </Typography>
@@ -102,7 +106,13 @@ function Navbar() {
             >
               {pages.map((page) => (
                 <Tooltip title={page.tooltip} key={page.tooltip}>
-                  <IconButton size="large" onClick={() => navigate(page.route)}>
+                  <IconButton
+                    size="large"
+                    onClick={() => {
+                      dispatch(setSearchText({ searchText: "" }));
+                      navigate(page.route);
+                    }}
+                  >
                     {page.id === 2 && (
                       <FavoriteBorderIcon
                         alt={page.tooltip}
@@ -120,8 +130,10 @@ function Navbar() {
                 </IconButton>
               </Tooltip>
               <Menu
-              
-                sx={{ mt: "40px", boxShadow:"0px 1px 2px rgb(23 110 222 / 5%)" }}
+                sx={{
+                  mt: "40px",
+                  boxShadow: "0px 1px 2px rgb(23 110 222 / 5%)",
+                }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
@@ -140,10 +152,16 @@ function Navbar() {
                   <MenuItem
                     key={setting}
                     onClick={() => handleCloseUserMenu(setting)}
-                    sx={{display: "flex", alignItems: "center"}}
+                    sx={{ display: "flex", alignItems: "center" }}
                   >
-                    {setting=="Profile" ? <AccountCircleIcon sx={{color:primary}} />:<LogoutIcon sx={{color:primary}}/>}
-                    <Typography textAlign="center" sx={{ml:1}}>{setting} </Typography>
+                    {setting == "Profile" ? (
+                      <AccountCircleIcon sx={{ color: primary }} />
+                    ) : (
+                      <LogoutIcon sx={{ color: primary }} />
+                    )}
+                    <Typography textAlign="center" sx={{ ml: 1 }}>
+                      {setting}{" "}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>

@@ -14,14 +14,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { grey } from "@mui/material/colors";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import NoData from "../../Assets/no_data_found.svg";
 import { recipeServes, recipeTypes } from "../../Common/Constants";
 import HeadingLGBlue from "../../Common/HeadingLGBlue";
@@ -34,9 +36,9 @@ import {
   setRecipeType,
   setSearchText,
 } from "../../redux/slices/filtersSlice";
+import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import RecipeCard from "./recipe_card";
-import { motion } from "framer-motion";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,7 +51,9 @@ const Dashboard = () => {
   const filtersState = useSelector(getFiltersState);
   const [type, setType] = useState(filtersState.type);
   const [serves, setServes] = useState(filtersState.serves);
+  const loggedUser = useSelector(getLoggedUser);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const getUserRecipes = async () => {
     setRecipesList([]);
@@ -67,7 +71,14 @@ const Dashboard = () => {
       if (user_docs.docs.length > 0) {
         let recipes = [];
         user_docs.docs.map((doc) => {
-          recipes.push({ _id: doc.id, ...doc.data() });
+          if (location.pathname == "/home") {
+            recipes.push({ _id: doc.id, ...doc.data() });
+          } else if (location.pathname == "/favourites") {
+            let data = doc.data();
+            if (data.favouritedBy.includes(loggedUser.uid)) {
+              recipes.push({ _id: doc.id, ...data });
+            }
+          }
         });
         if (filtersState.type) {
           recipes = recipes.filter((dtype) => dtype.type === filtersState.type);
@@ -86,9 +97,12 @@ const Dashboard = () => {
     }
   };
 
-  // useMemo(() => {
-  //   getUserRecipes();
-  // }, [filtersState.searchText]);
+  useEffect(() => {
+    if (loggedUser) {
+      handleFiltersModalClose();
+      getUserRecipes();
+    }
+  }, [location.pathname, loggedUser]);
 
   useEffect(() => {
     if (!showFiltersModal) {
@@ -97,10 +111,15 @@ const Dashboard = () => {
   }, [showFiltersModal, filtersState.type, filtersState.serves]);
 
   useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      console.log(filtersState.searchText);
+    let debounceTimer;
+    if (filtersState.searchText == "") {
       getUserRecipes();
-    }, 400);
+    } else {
+      debounceTimer = setTimeout(() => {
+        console.log(filtersState.searchText);
+        getUserRecipes();
+      }, 400);
+    }
     return () => clearTimeout(debounceTimer);
   }, [filtersState.searchText]);
 
@@ -137,56 +156,64 @@ const Dashboard = () => {
           ease: "easeInOut",
         }}
       >
-        <HeadingLGBlue text1="Explore" text2="Recipes" />
+        <HeadingLGBlue
+          text1="Explore"
+          text2={
+            location.pathname == "/home"
+              ? "Recipes"
+              : location.pathname == "/favourites"
+              ? "Favourites"
+              : ""
+          }
+        />
       </motion.div>
       <Stack spacing={2} sx={{ marginY: 2 }}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: [0, 1] }}
-        transition={{
-          duration: 0.5,
-          ease: "easeInOut",
-        }}
-      >
-
-        <Paper
-          component="form"
-          elevation={0}
-          sx={{
-            p: "2px 4px",
-            display: "flex",
-            alignItems: "center",
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: [0, 1] }}
+          transition={{
+            duration: 0.5,
+            ease: "easeInOut",
           }}
         >
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search Recipe"
-            inputProps={{ "aria-label": "search recipe" }}
-            value={filtersState.searchText}
-            onKeyUp={(e) => {
-              dispatch(setSearchText({ searchText: e.target.value }));
+          <Paper
+            component="form"
+            elevation={0}
+            sx={{
+              p: "2px 4px",
+              display: "flex",
+              alignItems: "center",
             }}
-            onChange={(e) => {
-              e.preventDefault();
-              // console.log(e.target.value);
-              dispatch(setSearchText({ searchText: e.target.value }));
-            }}
-          />
-          {filtersState.searchText && (
-            <IconButton
-              type="button"
-              sx={{ p: "10px" }}
-              aria-label="search"
-              onClick={() => dispatch(setSearchText({ searchText: "" }))}
-            >
-              <CloseIcon />
+          >
+            <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+              <SearchIcon />
             </IconButton>
-          )}
-        </Paper>
-      </motion.div>
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search Recipe"
+              inputProps={{ "aria-label": "search recipe" }}
+              value={filtersState.searchText}
+              onKeyUp={(e) => {
+                dispatch(setSearchText({ searchText: e.target.value }));
+              }}
+              onChange={(e) => {
+                e.preventDefault();
+                // console.log(e.target.value);
+                dispatch(setSearchText({ searchText: e.target.value }));
+              }}
+            />
+            {filtersState.searchText && (
+              <IconButton
+                type="button"
+                sx={{ p: "10px" }}
+                aria-label="search"
+                onClick={() => dispatch(setSearchText({ searchText: "" }))}
+              >
+                <CloseIcon />
+              </IconButton>
+            )}
+          </Paper>
+        </motion.div>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           {filtersState.isFiltersApplied && (
             <Stack direction="row" spacing={1}>
