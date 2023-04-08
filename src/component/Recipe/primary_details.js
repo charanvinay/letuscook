@@ -1,5 +1,5 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
@@ -7,17 +7,21 @@ import {
   Button,
   Divider,
   Grid,
-  MenuItem,
-  Select,
   Stack,
-  TextField,
   Typography
 } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { bottomButtonsStyle, getUniqueId, recipeServes, recipeTypes } from "../../Common/Constants";
+import CSTMSelect from "../../Common/CSTMSelect";
+import CSTMTextField from "../../Common/CSTMTextField";
+import {
+  bottomButtonsStyle,
+  getUniqueId,
+  recipeServes,
+  recipeTypes,
+} from "../../Common/Constants";
 import ErrorAlert from "../../Common/ErrorAlert";
 import HeadingMD from "../../Common/HeadingMD";
 import {
@@ -27,7 +31,7 @@ import {
   getRecipe,
   handlePrimitiveState,
   initialState,
-  setSelectedRecipe
+  setSelectedRecipe,
 } from "../../redux/slices/recipeSlice";
 import { getIsMobile, handleNext } from "../../redux/slices/userSlice";
 
@@ -115,18 +119,8 @@ const PrimaryDetails = (props) => {
       <Grid container spacing={1}>
         <Grid item xs={12} md={4}>
           <HeadingMD text={"Title"} width={20} />
-          <TextField
-            inputProps={{
-              maxLength: 20,
-            }}
-            InputProps={{
-              style: {
-                letterSpacing: 0.6,
-              },
-              placeholder: "Eg: Chicken Biryani ",
-            }}
-            fullWidth
-            variant="outlined"
+          <CSTMTextField
+            placeholder="Eg: Chicken Biryani "
             name="title"
             value={recipe.title}
             onChange={handleChanges}
@@ -134,43 +128,23 @@ const PrimaryDetails = (props) => {
         </Grid>
         <Grid item xs={12} md={4}>
           <HeadingMD text={"Type"} width={20} />
-          <Select
-            value={recipe.type || ""}
-            displayEmpty
+          <CSTMSelect
+            placeholder="Eg: NonVeg"
             name="type"
-            sx={{ width: "100%" }}
-            renderValue={(selected) => {
-              if (!Boolean(selected)) {
-                return <p style={{ color: "rgb(191 191 191)" }}>Eg: NonVeg</p>;
-              }
-              return selected;
-            }}
+            value={recipe.type}
             onChange={handleChanges}
-          >
-            {recipeTypes.map((type, ind)=> <MenuItem value={type} key={ind}>{type}</MenuItem>)}
-          </Select>
+            options={recipeTypes}
+          />
         </Grid>
         <Grid item xs={12} md={4}>
           <HeadingMD text={"Serves"} width={20} />
-          <Select
-            value={recipe.serves || ""}
-            displayEmpty
+          <CSTMSelect
+            placeholder="Eg: 4"
             name="serves"
-            sx={{ width: "100%" }}
-            renderValue={(selected) => {
-              if (!Boolean(selected)) {
-                return <p style={{ color: "rgb(191 191 191)" }}>Eg: 4</p>;
-              }
-              return selected;
-            }}
+            value={recipe.serves}
             onChange={handleChanges}
-          >
-            {recipeServes.map((num) => (
-              <MenuItem value={num} key={num}>
-                {num}
-              </MenuItem>
-            ))}
-          </Select>
+            options={recipeServes}
+          />
         </Grid>
       </Grid>
       <Box sx={{ height: "10px" }}></Box>
@@ -207,18 +181,8 @@ const PrimaryDetails = (props) => {
                     >
                       Name
                     </Typography>
-                    <TextField
-                      inputProps={{
-                        maxLength: 20,
-                      }}
-                      InputProps={{
-                        style: {
-                          letterSpacing: 0.6,
-                        },
-                        placeholder: "Eg: Salt ",
-                      }}
-                      fullWidth
-                      variant="outlined"
+                    <CSTMTextField
+                      placeholder="Eg: Salt "
                       name="title"
                       value={ingredient.value}
                       onChange={(e) =>
@@ -238,18 +202,8 @@ const PrimaryDetails = (props) => {
                     >
                       Units
                     </Typography>
-                    <TextField
-                      inputProps={{
-                        maxLength: 20,
-                      }}
-                      InputProps={{
-                        style: {
-                          letterSpacing: 0.6,
-                        },
-                        placeholder: "Eg: 1 tbsp ",
-                      }}
-                      fullWidth
-                      variant="outlined"
+                    <CSTMTextField
+                      placeholder="Eg: 1 tbsp "
                       name="title"
                       value={ingredient.units}
                       onChange={(e) =>

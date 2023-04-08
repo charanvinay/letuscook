@@ -1,36 +1,52 @@
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Box,
+  Button,
   Container,
-  Fab,
+  Divider,
   Grid,
-  Paper,
   Stack,
   Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import HeadingMD from "../../Common/HeadingMD";
-import HeadingXLBold from "../../Common/HeadingXLBold";
-import Subtitle1 from "../../Common/Subtitle1";
-
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditIcon from "@mui/icons-material/Edit";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
+import moment from "moment";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientBLACK from "../../Assets/20210113_083213.png";
 import { BookLoaderComponent } from "../../Common/BookLoader";
-import { returnType } from "../../Common/Constants";
+import CSTMSelect from "../../Common/CSTMSelect";
+import CSTMTextField from "../../Common/CSTMTextField";
+import {
+  getAllSubstrings,
+  getUniqueId,
+  recipeServes,
+  recipeTypes,
+  returnType,
+} from "../../Common/Constants";
+import EditOutlineBTN from "../../Common/EditOutlineBTN";
+import ErrorAlert from "../../Common/ErrorAlert";
+import HeadingMD from "../../Common/HeadingMD";
+import HeadingXLBold from "../../Common/HeadingXLBold";
 import Serves from "../../Common/Ribbons/Serves";
+import CKeditor from "../../Common/Skeletons/CKeditor";
+import Step from "../../Common/Skeletons/Step";
+import Subtitle1 from "../../Common/Subtitle1";
+import SuccessAlert from "../../Common/SuccessAlert";
 import ToggleSwitch from "../../Common/toggle_switch";
 import TopProgress from "../../Common/top_progress";
-import { setSelectedRecipe } from "../../redux/slices/recipeSlice";
 import {
   getActiveTab,
   getIsMobile,
@@ -38,29 +54,46 @@ import {
 } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
+const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
 const RecipeDetails = () => {
+  const [open, setOpen] = useState(false);
   const [recipe, setRecipe] = useState({});
+  const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(true);
-  const search = useLocation().search;
+  const [errorText, setErrorText] = useState(false);
+  const [successText, setSuccessText] = useState(false);
+  const [modifiedRecipe, setModifiedRecipe] = useState({});
+  const [selectedField, setSelectedField] = useState(null);
+  const [errorSnackOpen, setErrorSnackOpen] = useState(false);
+  const [displayEditors, setDisplayEditors] = useState(false);
+  const [successSnackOpen, setSuccessSnackOpen] = useState(false);
+
+  const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const theme = useTheme();
-  const [liked, setLiked] = useState(false);
+  const search = useLocation().search;
+
+  const isMobile = useSelector(getIsMobile);
+  const activeTab = useSelector(getActiveTab);
+
   const bpSMd = theme.breakpoints.down("md");
   const id = new URLSearchParams(search).get("id");
-  const isMobile = useSelector(getIsMobile);
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-  const activeTab = useSelector(getActiveTab);
-  // const { scrollYProgress } = useScroll();
 
   useEffect(() => {
     // console.log(id);
     if (id) {
       viewRecipe(id);
-      dispatch(setActiveTab(1));
     }
   }, [id]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplayEditors(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (recipe && recipe.favouritedBy) {
@@ -70,6 +103,14 @@ const RecipeDetails = () => {
       setLiked(cond);
     }
   }, [recipe]);
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setErrorSnackOpen(false);
+    setSuccessSnackOpen(false);
+  };
 
   const handleLikeRecipe = () => {
     const taskDocRef = doc(db, "recipes", recipe._id);
@@ -107,7 +148,9 @@ const RecipeDetails = () => {
       getDoc(docRef)
         .then((docSnap) => {
           // console.log(docSnap.data());
+          dispatch(setActiveTab(1));
           setRecipe({ _id: id, ...docSnap.data() });
+          setModifiedRecipe({ _id: id, ...docSnap.data() });
           setLoading(false);
         })
         .catch((err) => {
@@ -119,6 +162,369 @@ const RecipeDetails = () => {
       setLoading(false);
     }
   };
+
+  const handleEditRecipe = (field) => {
+    setOpen(true);
+    setSelectedField(field);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    viewRecipe(id);
+  };
+
+  const handleChanges = (e) => {
+    const { name, value } = e.target;
+    setModifiedRecipe({ ...modifiedRecipe, [name]: value });
+  };
+
+  const handleAdd = (name) => {
+    let obj;
+    if (name === "ingredients") {
+      obj = {
+        id: getUniqueId(),
+        errors: [],
+        units: "",
+        value: "",
+      };
+    } else if (name === "steps") {
+      obj = {
+        id: getUniqueId(),
+        errors: [],
+        value: null,
+      };
+    }
+    modifiedRecipe[name].push(obj);
+    setModifiedRecipe({ ...modifiedRecipe });
+  };
+
+  const handleListChanges = (id, value, name, type) => {
+    modifiedRecipe[name].map((item, ind) => {
+      if (item.id === id) {
+        modifiedRecipe[name][ind][type] = value;
+      }
+    });
+    setModifiedRecipe({ ...modifiedRecipe });
+  };
+
+  const handleFinish = (val, type) => {
+    if (type === "image") {
+      modifiedRecipe.finish["imgSrc"] = val;
+    } else {
+      modifiedRecipe.finish["value"] = val;
+    }
+  };
+
+  const handledeleteItem = (name, _id) => {
+    console.log(modifiedRecipe, name, _id);
+    let filteredItems = modifiedRecipe[name].filter((item) => item.id !== _id);
+    modifiedRecipe[name] = filteredItems;
+    setModifiedRecipe({ ...modifiedRecipe });
+  };
+
+  const returnModalBody = () => {
+    if (selectedField == "Title") {
+      return (
+        <CSTMTextField
+          placeholder="Eg: Chicken Biryani "
+          name="title"
+          value={modifiedRecipe.title}
+          onChange={handleChanges}
+        />
+      );
+    } else if (selectedField == "Serves & Type") {
+      return (
+        <Grid container spacing={1}>
+          <Grid item xs={12} md={6}>
+            <HeadingMD text={"Type"} width={20} />
+            <CSTMSelect
+              placeholder="Eg: NonVeg"
+              name="type"
+              value={modifiedRecipe.type}
+              onChange={handleChanges}
+              options={recipeTypes}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HeadingMD text={"Serves"} width={20} />
+            <CSTMSelect
+              placeholder="Eg: 4"
+              name="serves"
+              value={modifiedRecipe.serves}
+              onChange={handleChanges}
+              options={recipeServes}
+            />
+          </Grid>
+        </Grid>
+      );
+    } else if (selectedField == "Ingredients") {
+      return (
+        <>
+          <Grid container spacing={1}>
+            {modifiedRecipe.ingredients.length > 0 &&
+              modifiedRecipe.ingredients.map((ingredient, ikey) => {
+                return (
+                  <Grid item xs={12} md={12} key={ingredient.id}>
+                    {ikey > 0 && (
+                      <Box sx={{ marginY: "15px", position: "relative" }}>
+                        <Divider textAlign="left">
+                          Ingredient {ikey + 1}
+                        </Divider>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          size="small"
+                          sx={{ position: "absolute", right: 0, top: -5 }}
+                          startIcon={<DeleteIcon />}
+                          onClick={() =>
+                            handledeleteItem("ingredients", ingredient.id)
+                          }
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    )}
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} md={6}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ margin: "10px 0px", letterSpacing: 0.6 }}
+                        >
+                          Name
+                        </Typography>
+                        <CSTMTextField
+                          placeholder="Eg: Salt "
+                          name="value"
+                          value={ingredient.value}
+                          onChange={(e) =>
+                            handleListChanges(
+                              ingredient.id,
+                              e.target.value,
+                              "ingredients",
+                              "value"
+                            )
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ margin: "10px 0px", letterSpacing: 0.6 }}
+                        >
+                          Units
+                        </Typography>
+                        <CSTMTextField
+                          placeholder="Eg: 1 tbsp "
+                          name="units"
+                          value={ingredient.units}
+                          onChange={(e) =>
+                            handleListChanges(
+                              ingredient.id,
+                              e.target.value,
+                              "ingredients",
+                              "units"
+                            )
+                          }
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                );
+              })}
+          </Grid>
+          <Box sx={{ margin: "20px 0px 10px 0px" }}>
+            <Button
+              fullWidth={true}
+              onClick={() => handleAdd("ingredients")}
+              color="success"
+              sx={{ lineHeight: 0 }}
+              startIcon={<AddCircleOutlineIcon />}
+            >
+              Add Ingredient
+            </Button>
+          </Box>
+        </>
+      );
+    } else if (selectedField == "Steps") {
+      return (
+        <>
+          {displayEditors ? (
+            <>
+              {modifiedRecipe.steps?.map((step, skey) => {
+                return (
+                  <Box key={step.id}>
+                    {skey === 0 ? (
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ margin: "10px 0px", letterSpacing: 0.6 }}
+                      >
+                        {`Step ${skey + 1}`}
+                      </Typography>
+                    ) : (
+                      <Box sx={{ marginY: "25px", position: "relative" }}>
+                        <Divider textAlign="left">Step {skey + 1}</Divider>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          size="small"
+                          sx={{ position: "absolute", right: 0, top: -5 }}
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handledeleteItem("steps", step.id)}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    )}
+                    <Suspense fallback={<CKeditor />}>
+                      <div
+                        className="ckeditor"
+                        style={{ position: "relative" }}
+                      >
+                        <CKeditorRender
+                          value={step.value}
+                          id={step.id}
+                          handleChanges={(e) =>
+                            handleListChanges(step.id, e, "steps", "value")
+                          }
+                        />
+                      </div>
+                    </Suspense>
+                  </Box>
+                );
+              })}
+              <Box sx={{ margin: "20px 0px 10px 0px" }}>
+                <Button
+                  fullWidth={true}
+                  onClick={() => handleAdd("steps")}
+                  color="success"
+                  sx={{ lineHeight: 0 }}
+                  startIcon={<AddCircleOutlineIcon />}
+                >
+                  Add Step
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Step />
+          )}
+        </>
+      );
+    } else if (selectedField == "Final Step") {
+      return (
+        <>
+          {displayEditors ? (
+            <>
+              <Suspense fallback={<CKeditor />}>
+                <div className="ckeditor" style={{ position: "relative" }}>
+                  <CKeditorRender
+                    value={modifiedRecipe.finish.value}
+                    id={modifiedRecipe.finish.id}
+                    handleChanges={(e) => handleFinish(e, "finish")}
+                  />
+                </div>
+              </Suspense>
+            </>
+          ) : (
+            <Step />
+          )}
+        </>
+      );
+    }
+  };
+
+  const handleValidation = (values) => {
+    const errors = {};
+    if (selectedField == "Title" && !values.title) {
+      errors.title = "Please enter the title of your recipe";
+    } else if (selectedField == "Serves & Type") {
+      if (!values.type) {
+        errors.type = "Please select the type of your recipe";
+      }
+      if (!values.serves) {
+        errors.serves = "Please select the serves of your recipe";
+      }
+    } else if (selectedField == "Ingredients") {
+      if (values.ingredients.length < 1) {
+        errors.description = "Add minimum one ingredient";
+      } else {
+        values.ingredients.map((ingredient, ikey) => {
+          if (!Boolean(ingredient.value)) {
+            errors[
+              `Ingredient ${ikey + 1}`
+            ] = `Please enter the name of Ingredient ${ikey + 1}`;
+          } else if (!Boolean(ingredient.units)) {
+            errors[
+              `Ingredient ${ikey + 1}`
+            ] = `Please enter the units of Ingredient ${ikey + 1}`;
+          }
+        });
+      }
+    } else if (selectedField == "Steps") {
+      values.steps.map((step, skey) => {
+        if (!Boolean(step.value)) {
+          errors[`Step ${skey + 1}`] = `Please fill Step ${skey + 1}`;
+        }
+      });
+    } else if (selectedField == "Final Step") {
+      if (!Boolean(modifiedRecipe.finish.value)) {
+        errors[`Value`] = `Please fill the final step`;
+      }
+    }
+    return errors;
+  };
+
+  const handleUpdate = () => {
+    const taskDocRef = doc(db, "recipes", recipe._id);
+    // console.log(taskDocRef, recipe);
+    try {
+      if (Object.values(handleValidation(modifiedRecipe)).length !== 0) {
+        setErrorText(Object.values(handleValidation(modifiedRecipe))[0]);
+        setErrorSnackOpen(true);
+      } else {
+        let recipe_obj = null;
+        if (selectedField == "Title") {
+          recipe_obj = {
+            title: modifiedRecipe.title,
+            title_keywords: getAllSubstrings(modifiedRecipe?.title),
+          };
+        } else if (selectedField == "Serves & Type") {
+          recipe_obj = {
+            type: modifiedRecipe.type,
+            serves: modifiedRecipe.serves,
+          };
+        } else if (selectedField == "Ingredients") {
+          recipe_obj = {
+            ingredients: [...modifiedRecipe.ingredients],
+          };
+        } else if (selectedField == "Steps") {
+          recipe_obj = {
+            steps: [...modifiedRecipe.steps],
+          };
+        } else if (selectedField == "Final Step") {
+          recipe_obj = {
+            finish: modifiedRecipe.finish,
+          };
+        }
+        console.log(recipe_obj);
+        if (recipe_obj) {
+          updateDoc(taskDocRef, recipe_obj)
+            .then((res) => {
+              setSuccessSnackOpen(true);
+              setSuccessText("Updated Successfully!!!");
+              handleClose();
+              viewRecipe(id);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -277,14 +683,38 @@ const RecipeDetails = () => {
                         }}
                       >
                         <Box>
-                          <HeadingXLBold text={recipe.title} />
                           <Stack
-                            direction={"row"}
-                            spacing={0.5}
+                            direction="row"
                             alignItems="center"
+                            justifyContent="space-between"
                           >
-                            {returnType(recipe.type)}
-                            <Serves serves={recipe.serves} />
+                            <HeadingXLBold text={recipe.title} />
+                            {loggedUser.uid === recipe.uid && (
+                              <EditOutlineBTN
+                                onClick={() => handleEditRecipe("Title")}
+                              />
+                            )}
+                          </Stack>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Stack
+                              direction={"row"}
+                              spacing={0.5}
+                              alignItems="center"
+                            >
+                              {returnType(recipe.type)}
+                              <Serves serves={recipe.serves} />
+                            </Stack>
+                            {loggedUser.uid === recipe.uid && (
+                              <EditOutlineBTN
+                                onClick={() =>
+                                  handleEditRecipe("Serves & Type")
+                                }
+                              />
+                            )}
                           </Stack>
                         </Box>
                       </motion.div>
@@ -318,8 +748,48 @@ const RecipeDetails = () => {
                             ease: "easeInOut",
                           }}
                         >
-                          <Box sx={{ margin: "20px 0 10px 0" }}>
+                          <Box
+                            className="d-flex"
+                            sx={{ margin: "20px 0 10px 0" }}
+                          >
                             <HeadingMD text={"INGREDIENTS"} width={70} />
+                            {loggedUser.uid === recipe.uid && (
+                              <EditOutlineBTN
+                                onClick={() => handleEditRecipe("Ingredients")}
+                              />
+                            )}
+                          </Box>
+                        </motion.div>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "none",
+                          [bpSMd]: {
+                            display: activeTab == 2 ? "none" : "block",
+                          },
+                        }}
+                      >
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileInView={{ y: [20, 0], opacity: [0, 1] }}
+                          transition={{
+                            duration: 0.5,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Box
+                            className="d-flex"
+                            sx={{ margin: "0px 0 10px 0" }}
+                          >
+                            <HeadingMD
+                              text={"LIST OF INGREDIENTS"}
+                              width={70}
+                            />
+                            {loggedUser.uid === recipe.uid && (
+                              <EditOutlineBTN
+                                onClick={() => handleEditRecipe("Ingredients")}
+                              />
+                            )}
                           </Box>
                         </motion.div>
                       </Box>
@@ -331,7 +801,7 @@ const RecipeDetails = () => {
                         }}
                       >
                         <Grid container spacing={{ xs: 1, md: 3 }}>
-                          {recipe.ingredients.map((step, skey) => {
+                          {recipe.ingredients.map((ingredient, skey) => {
                             return (
                               <Grid
                                 item
@@ -355,9 +825,9 @@ const RecipeDetails = () => {
                                     justifyContent="space-between"
                                     className="row-item"
                                   >
-                                    <Subtitle1 text={step.value} />
+                                    <Subtitle1 text={ingredient.value} />
                                     <Subtitle1
-                                      text={step.units}
+                                      text={ingredient.units}
                                       color={"rgb(46 103 175)"}
                                       fontWeight="bold"
                                     />
@@ -383,8 +853,16 @@ const RecipeDetails = () => {
                             ease: "easeInOut",
                           }}
                         >
-                          <Box sx={{ margin: "25px 0px 15px 0px" }}>
+                          <Box
+                            className="d-flex"
+                            sx={{ margin: "25px 0px 15px 0px" }}
+                          >
                             <HeadingMD text={"STEPS"} width={35} />
+                            {loggedUser.uid === recipe.uid && (
+                              <EditOutlineBTN
+                                onClick={() => handleEditRecipe("Steps")}
+                              />
+                            )}
                           </Box>
                         </motion.div>
                         <Stack spacing={1} sx={{ margin: "5px 10px" }}>
@@ -418,8 +896,16 @@ const RecipeDetails = () => {
                             ease: "easeInOut",
                           }}
                         >
-                          <Box sx={{ margin: "20px 0 10px 0" }}>
+                          <Box
+                            className="d-flex"
+                            sx={{ margin: "20px 0 10px 0" }}
+                          >
                             <HeadingMD text={"FINAL STEP"} width={50} />
+                            {loggedUser.uid === recipe.uid && (
+                              <EditOutlineBTN
+                                onClick={() => handleEditRecipe("Final Step")}
+                              />
+                            )}
                           </Box>
                         </motion.div>
                         <motion.div
@@ -435,23 +921,6 @@ const RecipeDetails = () => {
                           </Stack>
                         </motion.div>
                       </Box>
-                      {loggedUser.uid === recipe.uid && (
-                        <Fab
-                          color="primary"
-                          aria-label="add"
-                          sx={{
-                            position: "fixed",
-                            bottom: 16,
-                            right: 16,
-                          }}
-                          onClick={() => {
-                            navigate("/edit");
-                            dispatch(setSelectedRecipe(recipe));
-                          }}
-                        >
-                          <EditIcon />
-                        </Fab>
-                      )}
                     </motion.div>
                   </Grid>
                   <Grid item xs={12} lg={4}>
@@ -475,6 +944,38 @@ const RecipeDetails = () => {
               </Container>
             </Box>
           </motion.div>
+          <ErrorAlert
+            snackopen={errorSnackOpen}
+            handleClose={handleCloseSnackbar}
+            text={errorText}
+          />
+          <SuccessAlert
+            snackopen={successSnackOpen}
+            handleClose={handleCloseSnackbar}
+            text={successText}
+          />
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            scroll="paper"
+            fullWidth={true}
+            maxWidth="md"
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+          >
+            <DialogTitle id="scroll-dialog-title">
+              Edit {selectedField}
+            </DialogTitle>
+            <DialogContent dividers={true}>{returnModalBody()}</DialogContent>
+            <DialogActions sx={{ padding: 2 }}>
+              <Button variant="outlined" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button variant="contained" onClick={handleUpdate}>
+                Update
+              </Button>
+            </DialogActions>
+          </Dialog>
         </>
       )}
     </>

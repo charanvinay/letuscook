@@ -1,6 +1,6 @@
-import React from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import React from "react";
 
 const CKEditorComp = (props) => {
   return (
@@ -13,7 +13,7 @@ const CKEditorComp = (props) => {
       }}
       data={props.value}
       onReady={(editor) => {
-        editor.focus();
+        // editor.focus();
       }}
       key={props.id}
       onChange={(event, editor) => {

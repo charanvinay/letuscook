@@ -96,3 +96,9 @@ thead tr th{
   border-radius: 10px;
   /* margin-bottom: 10px; */
 }
+
+.d-flex{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
