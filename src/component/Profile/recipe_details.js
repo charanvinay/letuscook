@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientBLACK from "../../Assets/20210113_083213.png";
 import { BookLoaderComponent } from "../../Common/BookLoader";
-import ImageIcon from "@mui/icons-material/Image";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import CSTMSelect from "../../Common/CSTMSelect";
 import CSTMTextField from "../../Common/CSTMTextField";
 import {
@@ -265,7 +265,7 @@ const RecipeDetails = () => {
           onChange={handleChanges}
         />
       );
-    } else if (selectedField == "Serves & Type") {
+    } else if (selectedField == "Type & Serves") {
       return (
         <Grid container spacing={1}>
           <Grid item xs={12} md={6}>
@@ -469,7 +469,7 @@ const RecipeDetails = () => {
     const errors = {};
     if (selectedField == "Title" && !values.title) {
       errors.title = "Please enter the title of your recipe";
-    } else if (selectedField == "Serves & Type") {
+    } else if (selectedField == "Type & Serves") {
       if (!values.type) {
         errors.type = "Please select the type of your recipe";
       }
@@ -521,7 +521,7 @@ const RecipeDetails = () => {
             title: selectedRecipe.title,
             title_keywords: getAllSubstrings(selectedRecipe?.title),
           };
-        } else if (selectedField == "Serves & Type") {
+        } else if (selectedField == "Type & Serves") {
           recipe_obj = {
             type: selectedRecipe.type,
             serves: selectedRecipe.serves,
@@ -626,12 +626,17 @@ const RecipeDetails = () => {
               </IconButton>
             </Tooltip>
             <Stack
-              direction="column"
-              spacing={1}
               sx={{
+                display: "flex",
+                gap: "5px",
+                flexDirection: "row-reverse",
+                alignItems: "center",
                 position: "absolute",
                 top: 5,
                 right: 5,
+                [bpSMd]: {
+                  flexDirection: "column"
+                }
               }}
             >
               <Tooltip title="Add to favourite">
@@ -659,7 +664,7 @@ const RecipeDetails = () => {
                     backgroundColor: "rgba(0,0,0,0.2) !important",
                   }}
                 >
-                  <ImageIcon sx={{color:"white"}} />
+                  <CameraAltIcon sx={{color:"white"}} />
                     <input
                       hidden
                       accept="image/*"
@@ -778,7 +783,7 @@ const RecipeDetails = () => {
                             {loggedUser.uid === recipe.uid && (
                               <EditOutlineBTN
                                 onClick={() =>
-                                  handleEditRecipe("Serves & Type")
+                                  handleEditRecipe("Type & Serves")
                                 }
                               />
                             )}
