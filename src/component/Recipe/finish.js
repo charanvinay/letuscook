@@ -49,6 +49,7 @@ import {
 } from "../../redux/slices/userSlice";
 import { db, storage } from "../../services/firebase";
 import CompleteRecipe from "./complete_recipe";
+import deletePreviousImage from "../../Common/deletePreviousImage";
 
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
@@ -125,19 +126,6 @@ const Finish = (props) => {
       .catch((error) => {
         console.log(error.message);
         setShowSkeleton(false);
-      });
-  };
-
-  const deletePreviousImage = (photo) => {
-    const storage = getStorage();
-    const storageRef = ref(storage, photo);
-    // console.log(storageRef);
-    deleteObject(storageRef)
-      .then(() => {
-        console.log("File deleted successfully");
-      })
-      .catch((error) => {
-        console.log(error.message);
       });
   };
 

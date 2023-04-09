@@ -261,7 +261,7 @@ const RecipeCard = (props) => {
               this in you list.
             </DialogContentText>
           </DialogContent>
-          <DialogActions>
+          <DialogActions sx={{padding: 2}}>
             <Button variant="contained" color="error" onClick={handleClose}>
               No
             </Button>

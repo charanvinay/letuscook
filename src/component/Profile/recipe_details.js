@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientBLACK from "../../Assets/20210113_083213.png";
 import { BookLoaderComponent } from "../../Common/BookLoader";
+import ImageIcon from "@mui/icons-material/Image";
 import CSTMSelect from "../../Common/CSTMSelect";
 import CSTMTextField from "../../Common/CSTMTextField";
 import {
@@ -52,18 +53,30 @@ import {
   getIsMobile,
   setActiveTab,
 } from "../../redux/slices/userSlice";
-import { db } from "../../services/firebase";
+import { db, storage } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
+import {
+  addItem,
+  deleteItem,
+  editFinish,
+  editItem,
+  getRecipe,
+  handlePrimitiveState,
+  setSelectedRecipe,
+} from "../../redux/slices/recipeSlice";
+import deletePreviousImage from "../../Common/deletePreviousImage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import CustomBackdrop from "../../Common/CustomBackdrop";
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
 const RecipeDetails = () => {
   const [open, setOpen] = useState(false);
   const [recipe, setRecipe] = useState({});
   const [liked, setLiked] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(true);
   const [errorText, setErrorText] = useState(false);
   const [successText, setSuccessText] = useState(false);
-  const [modifiedRecipe, setModifiedRecipe] = useState({});
   const [selectedField, setSelectedField] = useState(null);
   const [errorSnackOpen, setErrorSnackOpen] = useState(false);
   const [displayEditors, setDisplayEditors] = useState(false);
@@ -76,6 +89,7 @@ const RecipeDetails = () => {
 
   const isMobile = useSelector(getIsMobile);
   const activeTab = useSelector(getActiveTab);
+  const selectedRecipe = useSelector(getRecipe);
 
   const bpSMd = theme.breakpoints.down("md");
   const id = new URLSearchParams(search).get("id");
@@ -150,7 +164,7 @@ const RecipeDetails = () => {
           // console.log(docSnap.data());
           dispatch(setActiveTab(1));
           setRecipe({ _id: id, ...docSnap.data() });
-          setModifiedRecipe({ _id: id, ...docSnap.data() });
+          dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
           setLoading(false);
         })
         .catch((err) => {
@@ -170,12 +184,14 @@ const RecipeDetails = () => {
 
   const handleClose = () => {
     setOpen(false);
-    viewRecipe(id);
+    dispatch(setSelectedRecipe({ ...recipe }));
+    setSelectedField(null);
+    // viewRecipe(id);
   };
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
-    setModifiedRecipe({ ...modifiedRecipe, [name]: value });
+    dispatch(handlePrimitiveState({ name, value }));
   };
 
   const handleAdd = (name) => {
@@ -187,39 +203,56 @@ const RecipeDetails = () => {
         units: "",
         value: "",
       };
+      dispatch(addItem({ name: "ingredients", value: obj }));
     } else if (name === "steps") {
       obj = {
         id: getUniqueId(),
         errors: [],
         value: null,
       };
+      dispatch(addItem({ name: "steps", value: obj }));
     }
-    modifiedRecipe[name].push(obj);
-    setModifiedRecipe({ ...modifiedRecipe });
   };
 
   const handleListChanges = (id, value, name, type) => {
-    modifiedRecipe[name].map((item, ind) => {
-      if (item.id === id) {
-        modifiedRecipe[name][ind][type] = value;
-      }
-    });
-    setModifiedRecipe({ ...modifiedRecipe });
+    dispatch(editItem({ id, name, value, type }));
   };
 
   const handleFinish = (val, type) => {
+    let v = val;
     if (type === "image") {
-      modifiedRecipe.finish["imgSrc"] = val;
+      let file = val;
+      if (!file) return;
+      if (selectedRecipe.finish.imgSrc) {
+        deletePreviousImage(selectedRecipe.finish.imgSrc);
+      }
+      handleUploadImage(file, type);
     } else {
-      modifiedRecipe.finish["value"] = val;
+      dispatch(editFinish({ val: v, type }));
     }
   };
 
+  const handleUploadImage = (file, type) => {
+    const storageRef = ref(storage, `images/${loggedUser.uid}/${file.name}`);
+    uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        getDownloadURL(snapshot.ref)
+          .then((url) => {
+            console.log(url);
+            dispatch(editFinish({ val: url, type }));
+            handleUpdate(type, url);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   const handledeleteItem = (name, _id) => {
-    console.log(modifiedRecipe, name, _id);
-    let filteredItems = modifiedRecipe[name].filter((item) => item.id !== _id);
-    modifiedRecipe[name] = filteredItems;
-    setModifiedRecipe({ ...modifiedRecipe });
+    dispatch(deleteItem({ name: name, id: _id }));
   };
 
   const returnModalBody = () => {
@@ -228,7 +261,7 @@ const RecipeDetails = () => {
         <CSTMTextField
           placeholder="Eg: Chicken Biryani "
           name="title"
-          value={modifiedRecipe.title}
+          value={selectedRecipe.title}
           onChange={handleChanges}
         />
       );
@@ -240,7 +273,7 @@ const RecipeDetails = () => {
             <CSTMSelect
               placeholder="Eg: NonVeg"
               name="type"
-              value={modifiedRecipe.type}
+              value={selectedRecipe.type}
               onChange={handleChanges}
               options={recipeTypes}
             />
@@ -250,7 +283,7 @@ const RecipeDetails = () => {
             <CSTMSelect
               placeholder="Eg: 4"
               name="serves"
-              value={modifiedRecipe.serves}
+              value={selectedRecipe.serves}
               onChange={handleChanges}
               options={recipeServes}
             />
@@ -261,8 +294,8 @@ const RecipeDetails = () => {
       return (
         <>
           <Grid container spacing={1}>
-            {modifiedRecipe.ingredients.length > 0 &&
-              modifiedRecipe.ingredients.map((ingredient, ikey) => {
+            {selectedRecipe.ingredients.length > 0 &&
+              selectedRecipe.ingredients.map((ingredient, ikey) => {
                 return (
                   <Grid item xs={12} md={12} key={ingredient.id}>
                     {ikey > 0 && (
@@ -350,7 +383,7 @@ const RecipeDetails = () => {
         <>
           {displayEditors ? (
             <>
-              {modifiedRecipe.steps?.map((step, skey) => {
+              {selectedRecipe.steps?.map((step, skey) => {
                 return (
                   <Box key={step.id}>
                     {skey === 0 ? (
@@ -417,8 +450,8 @@ const RecipeDetails = () => {
               <Suspense fallback={<CKeditor />}>
                 <div className="ckeditor" style={{ position: "relative" }}>
                   <CKeditorRender
-                    value={modifiedRecipe.finish.value}
-                    id={modifiedRecipe.finish.id}
+                    value={selectedRecipe.finish.value}
+                    id={selectedRecipe.finish.id}
                     handleChanges={(e) => handleFinish(e, "finish")}
                   />
                 </div>
@@ -466,44 +499,51 @@ const RecipeDetails = () => {
         }
       });
     } else if (selectedField == "Final Step") {
-      if (!Boolean(modifiedRecipe.finish.value)) {
+      if (!Boolean(selectedRecipe.finish.value)) {
         errors[`Value`] = `Please fill the final step`;
       }
     }
     return errors;
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (type, val) => {
     const taskDocRef = doc(db, "recipes", recipe._id);
-    // console.log(taskDocRef, recipe);
+    console.log(selectedField, selectedRecipe.finish);
     try {
-      if (Object.values(handleValidation(modifiedRecipe)).length !== 0) {
-        setErrorText(Object.values(handleValidation(modifiedRecipe))[0]);
+      if (Object.values(handleValidation(selectedRecipe)).length !== 0) {
+        setErrorText(Object.values(handleValidation(selectedRecipe))[0]);
         setErrorSnackOpen(true);
       } else {
+        setLoader(true);
         let recipe_obj = null;
         if (selectedField == "Title") {
           recipe_obj = {
-            title: modifiedRecipe.title,
-            title_keywords: getAllSubstrings(modifiedRecipe?.title),
+            title: selectedRecipe.title,
+            title_keywords: getAllSubstrings(selectedRecipe?.title),
           };
         } else if (selectedField == "Serves & Type") {
           recipe_obj = {
-            type: modifiedRecipe.type,
-            serves: modifiedRecipe.serves,
+            type: selectedRecipe.type,
+            serves: selectedRecipe.serves,
           };
         } else if (selectedField == "Ingredients") {
           recipe_obj = {
-            ingredients: [...modifiedRecipe.ingredients],
+            ingredients: [...selectedRecipe.ingredients],
           };
         } else if (selectedField == "Steps") {
           recipe_obj = {
-            steps: [...modifiedRecipe.steps],
+            steps: [...selectedRecipe.steps],
           };
-        } else if (selectedField == "Final Step") {
+        } else if (selectedField == "Final Step" || type == "image") {
           recipe_obj = {
-            finish: modifiedRecipe.finish,
+            finish: {...selectedRecipe.finish},
           };
+          if(type){
+            recipe_obj = {
+              finish: {...selectedRecipe.finish, imgSrc: val},
+            };
+
+          }
         }
         console.log(recipe_obj);
         if (recipe_obj) {
@@ -511,8 +551,9 @@ const RecipeDetails = () => {
             .then((res) => {
               setSuccessSnackOpen(true);
               setSuccessText("Updated Successfully!!!");
-              handleClose();
+              setLoader(false);
               viewRecipe(id);
+              handleClose();
             })
             .catch((err) => {
               console.log(err);
@@ -584,26 +625,53 @@ const RecipeDetails = () => {
                 <ArrowBackIcon sx={{ fontSize: "1.5rem", color: "white" }} />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Add to favourite">
-              <IconButton
-                size="large"
-                sx={{
-                  position: "absolute",
-                  top: 5,
-                  right: 5,
-                  backgroundColor: "rgba(0,0,0,0.2) !important",
-                }}
-                onClick={(e) => handleLikeRecipe()}
-              >
-                {liked ? (
-                  <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-                ) : (
-                  <FavoriteBorderIcon
-                    sx={{ fontSize: "1.5rem", color: "white" }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
+            <Stack
+              direction="column"
+              spacing={1}
+              sx={{
+                position: "absolute",
+                top: 5,
+                right: 5,
+              }}
+            >
+              <Tooltip title="Add to favourite">
+                <IconButton
+                  size="large"
+                  sx={{
+                    backgroundColor: "rgba(0,0,0,0.2) !important",
+                  }}
+                  onClick={(e) => handleLikeRecipe()}
+                >
+                  {liked ? (
+                    <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+                  ) : (
+                    <FavoriteBorderIcon
+                      sx={{ fontSize: "1.5rem", color: "white" }}
+                    />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Change Image">
+                <IconButton
+                component="label"
+                  size="large"
+                  sx={{
+                    backgroundColor: "rgba(0,0,0,0.2) !important",
+                  }}
+                >
+                  <ImageIcon sx={{color:"white"}} />
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      name="imgSrc"
+                      onChange={(e) =>
+                        handleFinish(e.target.files[0], "image")
+                      }
+                    />
+                </IconButton>
+              </Tooltip>
+            </Stack>
             <Box
               sx={{
                 position: "absolute",
@@ -646,7 +714,7 @@ const RecipeDetails = () => {
                 position: "relative",
                 borderRadius: "15px 15px 0px 0px",
                 backgroundColor: "#EDF2F8",
-                boxShadow: " 0 -10px 20px 0px rgba(0, 0, 0, 0.6)",
+                boxShadow: "0 -18px 15px 1px rgb(0 0 0 / 43%)",
               }}
             >
               {/* <motion.div className="progress-bar" style={{ scaleX: scrollYProgress }} />  */}
@@ -672,7 +740,6 @@ const RecipeDetails = () => {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      staggerChildren={0.3}
                     >
                       <motion.div
                         initial={{ opacity: 0 }}
@@ -810,6 +877,7 @@ const RecipeDetails = () => {
                                 sx={{
                                   width: "100%",
                                 }}
+                                key={skey}
                               >
                                 <motion.div
                                   initial={{ opacity: 0 }}
@@ -876,6 +944,7 @@ const RecipeDetails = () => {
                                     duration: 0.5,
                                     ease: "easeInOut",
                                   }}
+                                  key={skey}
                                 >
                                   <li
                                     key={step.id}
@@ -978,6 +1047,7 @@ const RecipeDetails = () => {
           </Dialog>
         </>
       )}
+      <CustomBackdrop loading={loader} />
     </>
   );
 };

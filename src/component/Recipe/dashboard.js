@@ -112,6 +112,7 @@ const Dashboard = (props) => {
                   <RecipeCard
                     key={recipe._id}
                     recipe={recipe}
+                    uid={location.pathname == "/profile" ? loggedUser.uid : null}
                     navTo={`/view?id=${recipe._id}`}
                     getUserRecipes={getUserRecipes}
                   />
