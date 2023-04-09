@@ -15,11 +15,12 @@ import { db } from "../../services/firebase";
 import RecipeCard from "./recipe_card";
 
 const Dashboard = (props) => {
-  const [recipesList, setRecipesList] = useState([]);
   const [loadding, setLoadding] = useState(true);
+  const [recipesList, setRecipesList] = useState([]);
+
+  const location = useLocation();
   const filtersState = useSelector(getFiltersState);
   const loggedUser = useSelector(getLoggedUser);
-  const location = useLocation();
 
   const getUserRecipes = async () => {
     setRecipesList([]);
@@ -112,7 +113,9 @@ const Dashboard = (props) => {
                   <RecipeCard
                     key={recipe._id}
                     recipe={recipe}
-                    uid={location.pathname == "/profile" ? loggedUser.uid : null}
+                    uid={
+                      location.pathname == "/profile" ? loggedUser.uid : null
+                    }
                     navTo={`/view?id=${recipe._id}`}
                     getUserRecipes={getUserRecipes}
                   />

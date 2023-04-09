@@ -1,4 +1,5 @@
 import { Box, Container, Stack } from "@mui/material";
+import { motion } from "framer-motion";
 import React from "react";
 import { useSelector } from "react-redux";
 import HeadingLG from "../../Common/HeadingLG";
@@ -6,7 +7,6 @@ import HeadingMD from "../../Common/HeadingMD";
 import ImgWithBorder from "../../Common/ImgWithBorder";
 import Subtitle1 from "../../Common/Subtitle1";
 import { getRecipe } from "../../redux/slices/recipeSlice";
-import { motion } from "framer-motion";
 const CompleteRecipe = () => {
   const recipe = useSelector(getRecipe);
 

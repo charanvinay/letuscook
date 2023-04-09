@@ -9,32 +9,31 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import { collection, getDocs, query } from "firebase/firestore";
+import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getLoggedUser } from "../../redux/slices/userSlice";
-// import TopCover from "../../Assets/coverblack.jpg";
-import { collection, getDocs, query } from "firebase/firestore";
-import { motion } from "framer-motion";
-import { useState } from "react";
 import { db } from "../../services/firebase";
 import Dashboard from "../Recipe/dashboard";
-// import RightImg from "../../Assets/chicken.png";
-// import RightImg from "../../Assets/slicer.png";
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const loggedUser = useSelector(getLoggedUser);
   const [recipesCount, setRecipesCount] = useState(0);
   const [favouritesCount, setFavouritesCount] = useState(0);
+  
   const theme = useTheme();
+  const navigate = useNavigate();
+  const loggedUser = useSelector(getLoggedUser);
+  
   const bpSMd = theme.breakpoints.down("md");
-
+  
   useEffect(() => {
     if (loggedUser) {
       getUserRecipes();
     }
   }, [loggedUser]);
+  
   const getUserRecipes = async () => {
     let user_ref = query(
       collection(db, "recipes")
@@ -53,6 +52,7 @@ const Profile = () => {
       // console.log(recipes);
     }
   };
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}

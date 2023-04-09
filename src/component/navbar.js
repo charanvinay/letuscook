@@ -21,16 +21,15 @@ import { setSearchText } from "../redux/slices/filtersSlice";
 import { getLoggedUser, handleLoggedUser } from "../redux/slices/userSlice";
 import { auth, logOut } from "../services/firebase";
 
-const pages = [
-  { id: 2, tooltip: "Favourites", route: "/favourites" },
-];
+const pages = [{ id: 2, tooltip: "Favourites", route: "/favourites" }];
 const settings = ["Profile", "Logout"];
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [user, loading] = useAuthState(auth);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [user, loading] = useAuthState(auth);
   const loggedUser = useSelector(getLoggedUser);
 
   useEffect(() => {

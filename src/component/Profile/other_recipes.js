@@ -4,11 +4,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListItem from "../../Common/Skeletons/ListItem";
 import { db } from "../../services/firebase";
-import { motion } from "framer-motion";
 
 export default function OtherRecipes({ id, uid, name }) {
   const [loadding, setLoadding] = useState(true);

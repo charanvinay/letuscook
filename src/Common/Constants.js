@@ -173,3 +173,15 @@ export const getAllSubstrings= (str) => {
   }
   return res;
 }
+
+export const steps = [
+  {
+    label: "Title & Ingredients",
+  },
+  {
+    label: "Step by Step Procedure",
+  },
+  {
+    label: "Finishing touch",
+  },
+];

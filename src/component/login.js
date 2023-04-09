@@ -14,13 +14,14 @@ import { bgSecondary, primary } from "../Common/Pallete";
 import { auth, signInWithGoogle } from "../services/firebase";
 
 function Login() {
-  const [user, loading] = useAuthState(auth);
-  const [pageLoading, setPageLoading] = useState(false);
-  const [isLoggedin, setIsLoggedin] = useState(false);
-  const [loadBackdrop, setLoadBackdrop] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
+  const [isLoggedin, setIsLoggedin] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
+  const [loadBackdrop, setLoadBackdrop] = useState(false);
+
   const theme = useTheme();
   const navigate = useNavigate();
+  const [user, loading] = useAuthState(auth);
 
   const bpSMd = theme.breakpoints.down("sm"); //max-width:599.95px
   const bpXLd = theme.breakpoints.down("xl"); //max-width:1535.95px
@@ -154,7 +155,12 @@ function Login() {
                       filter: "invert(100%)",
                     }}
                   >
-                    <img src={dotscross} alt={"dotswhite"} width="400px" loading="lazy"/>
+                    <img
+                      src={dotscross}
+                      alt={"dotswhite"}
+                      width="400px"
+                      loading="lazy"
+                    />
                   </Box>
                   <Box sx={{ width: "50%" }}>
                     <motion.div
@@ -174,38 +180,38 @@ function Login() {
                     </motion.div>
                   </Box>
                   <Box sx={{ margin: "20px 0px 10px 0px" }}>
-                  <motion.div
+                    <motion.div
                       initial={{ opacity: 0 }}
                       whileInView={{ y: [20, 0], opacity: [0, 1] }}
                       transition={{
                         duration: 0.5,
                         ease: "easeInOut",
-                        delay: 0.5
+                        delay: 0.5,
                       }}
                     >
-                    <Button
-                      variant="contained"
-                      fullWidth={true}
-                      onClick={() => {
-                        const isloggedin = signInWithGoogle();
-                        if (isloggedin) {
-                          setIsLoggedin(isloggedin);
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: "white",
-                        color: primary,
-                        fontWeight: "bold",
-                        textTransform: "none",
-                        "&:hover": {
+                      <Button
+                        variant="contained"
+                        fullWidth={true}
+                        onClick={() => {
+                          const isloggedin = signInWithGoogle();
+                          if (isloggedin) {
+                            setIsLoggedin(isloggedin);
+                          }
+                        }}
+                        sx={{
                           backgroundColor: "white",
-                        },
-                      }}
-                      startIcon={<FcGoogle />}
-                    >
-                      Sign In With Google
-                    </Button>
-                      </motion.div>
+                          color: primary,
+                          fontWeight: "bold",
+                          textTransform: "none",
+                          "&:hover": {
+                            backgroundColor: "white",
+                          },
+                        }}
+                        startIcon={<FcGoogle />}
+                      >
+                        Sign In With Google
+                      </Button>
+                    </motion.div>
                   </Box>
                   <Box
                     sx={{
@@ -217,7 +223,12 @@ function Login() {
                       filter: "invert(100%)",
                     }}
                   >
-                    <img src={dotsb} alt={"dotswhite"} width="200px" loading="lazy"/>
+                    <img
+                      src={dotsb}
+                      alt={"dotswhite"}
+                      width="200px"
+                      loading="lazy"
+                    />
                   </Box>
                 </Box>
               </Box>

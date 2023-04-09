@@ -1,9 +1,9 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bottomButtonsStyle, getUniqueId } from "../../Common/Constants";
 import ErrorAlert from "../../Common/ErrorAlert";
@@ -13,12 +13,12 @@ import {
   addItem,
   deleteItem,
   editItem,
-  getRecipe
+  getRecipe,
 } from "../../redux/slices/recipeSlice";
 import {
   getIsMobile,
   handleBack,
-  handleNext
+  handleNext,
 } from "../../redux/slices/userSlice";
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
@@ -29,7 +29,6 @@ const RecipeSteps = (props) => {
 
   const recipe = useSelector(getRecipe);
   const isMobile = useSelector(getIsMobile);
-  // console.log(recipe);
 
   const dispatch = useDispatch();
 
@@ -51,24 +50,6 @@ const RecipeSteps = (props) => {
     dispatch(editItem({ id, name, value, type }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (Object.values(handleValidation()).length !== 0) {
-      setErrorText(Object.values(handleValidation())[0]);
-      setsnackOpen(true);
-    } else {
-      goToNextPage();
-    }
-  };
-
-  const goToPreviousPage = () => {
-    dispatch(handleBack());
-  };
-
-  const goToNextPage = () => {
-    dispatch(handleNext());
-  };
-
   const handleAdd = () => {
     let newStep = {
       id: getUniqueId(),
@@ -87,6 +68,25 @@ const RecipeSteps = (props) => {
     });
     return errors;
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (Object.values(handleValidation()).length !== 0) {
+      setErrorText(Object.values(handleValidation())[0]);
+      setsnackOpen(true);
+    } else {
+      goToNextPage();
+    }
+  };
+
+  const goToPreviousPage = () => {
+    dispatch(handleBack());
+  };
+
+  const goToNextPage = () => {
+    dispatch(handleNext());
+  };
+
   return (
     <Box component="main" sx={{ px: 1, py: 2 }}>
       {displayEditors ? (

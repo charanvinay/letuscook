@@ -1,37 +1,28 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
-import { useState } from "react";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
+import { motion } from "framer-motion";
+import * as React from "react";
 import { useEffect } from "react";
-import PrimaryDetails from "./primary_details";
-import RecipeSteps from "./steps";
-import Finish from "./finish";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getActiveStep,
   getIsMobile,
   setIsMobile,
 } from "../../redux/slices/userSlice";
-import { motion } from "framer-motion";
-const steps = [
-  {
-    label: "Title & Ingredients",
-  },
-  {
-    label: "Step by Step Procedure",
-  },
-  {
-    label: "Finishing touch",
-  },
-];
+import Finish from "./finish";
+import PrimaryDetails from "./primary_details";
+import RecipeSteps from "./steps";
+import { steps } from "../../Common/Constants";
 
 export default function AddRecipe() {
+  
+  const dispatch = useDispatch();
+  
   const isMobile = useSelector(getIsMobile);
   const activeStep = useSelector(getActiveStep);
-  const dispatch = useDispatch();
 
   // create an event listener
   useEffect(() => {

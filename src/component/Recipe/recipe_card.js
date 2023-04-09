@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import Slide from "@mui/material/Slide";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { deleteObject, getStorage, ref } from "firebase/storage";
+import { motion } from "framer-motion";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -28,7 +29,6 @@ import { returnType } from "../../Common/Constants";
 import Serves from "../../Common/Ribbons/Serves";
 import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
-import { motion } from "framer-motion";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,11 +37,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const RecipeCard = (props) => {
   let { navTo, recipe, isReloadList } = props;
   let { _id, uid, title, name, finish, serves, type, createdAt } = props.recipe;
+
+  const [open, setOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [favouritedBy, setFavouritedBy] = useState(recipe.favouritedBy);
+
   const navigate = useNavigate();
   const loggedUser = useSelector(getLoggedUser);
-  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     let cond = recipe.favouritedBy.includes(loggedUser.uid);
@@ -124,7 +126,8 @@ const RecipeCard = (props) => {
       initial={{ opacity: 0 }}
       whileInView={{ y: [20, 0], opacity: [0, 1] }}
       transition={{ duration: 0.7, ease: "easeInOut" }}
-      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.9 }}
     >
       <Box sx={{ position: "relative" }}>
         <Card
@@ -261,7 +264,7 @@ const RecipeCard = (props) => {
               this in you list.
             </DialogContentText>
           </DialogContent>
-          <DialogActions sx={{padding: 2}}>
+          <DialogActions sx={{ padding: 2 }}>
             <Button variant="contained" color="error" onClick={handleClose}>
               No
             </Button>

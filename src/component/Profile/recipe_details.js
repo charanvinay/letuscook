@@ -1,5 +1,6 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -20,6 +21,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { motion } from "framer-motion";
 import moment from "moment";
 import React, { Suspense, lazy, useEffect, useState } from "react";
@@ -27,7 +29,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import GradientBLACK from "../../Assets/20210113_083213.png";
 import { BookLoaderComponent } from "../../Common/BookLoader";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import CSTMSelect from "../../Common/CSTMSelect";
 import CSTMTextField from "../../Common/CSTMTextField";
 import {
@@ -37,6 +38,7 @@ import {
   recipeTypes,
   returnType,
 } from "../../Common/Constants";
+import CustomBackdrop from "../../Common/CustomBackdrop";
 import EditOutlineBTN from "../../Common/EditOutlineBTN";
 import ErrorAlert from "../../Common/ErrorAlert";
 import HeadingMD from "../../Common/HeadingMD";
@@ -46,15 +48,9 @@ import CKeditor from "../../Common/Skeletons/CKeditor";
 import Step from "../../Common/Skeletons/Step";
 import Subtitle1 from "../../Common/Subtitle1";
 import SuccessAlert from "../../Common/SuccessAlert";
+import deletePreviousImage from "../../Common/deletePreviousImage";
 import ToggleSwitch from "../../Common/toggle_switch";
 import TopProgress from "../../Common/top_progress";
-import {
-  getActiveTab,
-  getIsMobile,
-  setActiveTab,
-} from "../../redux/slices/userSlice";
-import { db, storage } from "../../services/firebase";
-import OtherRecipes from "./other_recipes";
 import {
   addItem,
   deleteItem,
@@ -64,9 +60,13 @@ import {
   handlePrimitiveState,
   setSelectedRecipe,
 } from "../../redux/slices/recipeSlice";
-import deletePreviousImage from "../../Common/deletePreviousImage";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import CustomBackdrop from "../../Common/CustomBackdrop";
+import {
+  getActiveTab,
+  getIsMobile,
+  setActiveTab,
+} from "../../redux/slices/userSlice";
+import { db, storage } from "../../services/firebase";
+import OtherRecipes from "./other_recipes";
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
 const RecipeDetails = () => {
@@ -98,7 +98,7 @@ const RecipeDetails = () => {
   useEffect(() => {
     // console.log(id);
     if (id) {
-      viewRecipe(id);
+      getRecipeDetails(id);
     }
   }, [id]);
 
@@ -118,12 +118,26 @@ const RecipeDetails = () => {
     }
   }, [recipe]);
 
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+  const getRecipeDetails = (id) => {
+    setLoading(true);
+    const docRef = doc(db, "recipes", id);
+    try {
+      getDoc(docRef)
+        .then((docSnap) => {
+          // console.log(docSnap.data());
+          dispatch(setActiveTab(1));
+          setRecipe({ _id: id, ...docSnap.data() });
+          dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-    setErrorSnackOpen(false);
-    setSuccessSnackOpen(false);
   };
 
   const handleLikeRecipe = () => {
@@ -153,47 +167,6 @@ const RecipeDetails = () => {
     }
   };
 
-  const handleGoBack = () => navigate(-1);
-
-  const viewRecipe = (id) => {
-    setLoading(true);
-    const docRef = doc(db, "recipes", id);
-    try {
-      getDoc(docRef)
-        .then((docSnap) => {
-          // console.log(docSnap.data());
-          dispatch(setActiveTab(1));
-          setRecipe({ _id: id, ...docSnap.data() });
-          dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
-
-  const handleEditRecipe = (field) => {
-    setOpen(true);
-    setSelectedField(field);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    dispatch(setSelectedRecipe({ ...recipe }));
-    setSelectedField(null);
-    // viewRecipe(id);
-  };
-
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    dispatch(handlePrimitiveState({ name, value }));
-  };
-
   const handleAdd = (name) => {
     let obj;
     if (name === "ingredients") {
@@ -212,6 +185,16 @@ const RecipeDetails = () => {
       };
       dispatch(addItem({ name: "steps", value: obj }));
     }
+  };
+
+  const handleEditRecipe = (field) => {
+    setOpen(true);
+    setSelectedField(field);
+  };
+
+  const handleChanges = (e) => {
+    const { name, value } = e.target;
+    dispatch(handlePrimitiveState({ name, value }));
   };
 
   const handleListChanges = (id, value, name, type) => {
@@ -253,6 +236,113 @@ const RecipeDetails = () => {
 
   const handledeleteItem = (name, _id) => {
     dispatch(deleteItem({ name: name, id: _id }));
+  };
+
+  const handleValidation = (values) => {
+    const errors = {};
+    if (selectedField == "Title" && !values.title) {
+      errors.title = "Please enter the title of your recipe";
+    } else if (selectedField == "Type & Serves") {
+      if (!values.type) {
+        errors.type = "Please select the type of your recipe";
+      }
+      if (!values.serves) {
+        errors.serves = "Please select the serves of your recipe";
+      }
+    } else if (selectedField == "Ingredients") {
+      if (values.ingredients.length < 1) {
+        errors.description = "Add minimum one ingredient";
+      } else {
+        values.ingredients.map((ingredient, ikey) => {
+          if (!Boolean(ingredient.value)) {
+            errors[
+              `Ingredient ${ikey + 1}`
+            ] = `Please enter the name of Ingredient ${ikey + 1}`;
+          } else if (!Boolean(ingredient.units)) {
+            errors[
+              `Ingredient ${ikey + 1}`
+            ] = `Please enter the units of Ingredient ${ikey + 1}`;
+          }
+        });
+      }
+    } else if (selectedField == "Steps") {
+      values.steps.map((step, skey) => {
+        if (!Boolean(step.value)) {
+          errors[`Step ${skey + 1}`] = `Please fill Step ${skey + 1}`;
+        }
+      });
+    } else if (selectedField == "Final Step") {
+      if (!Boolean(selectedRecipe.finish.value)) {
+        errors[`Value`] = `Please fill the final step`;
+      }
+    }
+    return errors;
+  };
+
+  const handleUpdate = (type, val) => {
+    const taskDocRef = doc(db, "recipes", recipe._id);
+    console.log(selectedField, selectedRecipe.finish);
+    try {
+      if (Object.values(handleValidation(selectedRecipe)).length !== 0) {
+        setErrorText(Object.values(handleValidation(selectedRecipe))[0]);
+        setErrorSnackOpen(true);
+      } else {
+        setLoader(true);
+        let recipe_obj = null;
+        if (selectedField == "Title") {
+          recipe_obj = {
+            title: selectedRecipe.title,
+            title_keywords: getAllSubstrings(selectedRecipe?.title),
+          };
+        } else if (selectedField == "Type & Serves") {
+          recipe_obj = {
+            type: selectedRecipe.type,
+            serves: selectedRecipe.serves,
+          };
+        } else if (selectedField == "Ingredients") {
+          recipe_obj = {
+            ingredients: [...selectedRecipe.ingredients],
+          };
+        } else if (selectedField == "Steps") {
+          recipe_obj = {
+            steps: [...selectedRecipe.steps],
+          };
+        } else if (selectedField == "Final Step" || type == "image") {
+          recipe_obj = {
+            finish: { ...selectedRecipe.finish },
+          };
+          if (type) {
+            recipe_obj = {
+              finish: { ...selectedRecipe.finish, imgSrc: val },
+            };
+          }
+        }
+        console.log(recipe_obj);
+        if (recipe_obj) {
+          updateDoc(taskDocRef, recipe_obj)
+            .then((res) => {
+              setSuccessSnackOpen(true);
+              setSuccessText("Updated Successfully!!!");
+              setLoader(false);
+              getRecipeDetails(id);
+              handleClose();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    dispatch(setSelectedRecipe({ ...recipe }));
+    setSelectedField(null);
+    // getRecipeDetails(id);
   };
 
   const returnModalBody = () => {
@@ -465,105 +555,14 @@ const RecipeDetails = () => {
     }
   };
 
-  const handleValidation = (values) => {
-    const errors = {};
-    if (selectedField == "Title" && !values.title) {
-      errors.title = "Please enter the title of your recipe";
-    } else if (selectedField == "Type & Serves") {
-      if (!values.type) {
-        errors.type = "Please select the type of your recipe";
-      }
-      if (!values.serves) {
-        errors.serves = "Please select the serves of your recipe";
-      }
-    } else if (selectedField == "Ingredients") {
-      if (values.ingredients.length < 1) {
-        errors.description = "Add minimum one ingredient";
-      } else {
-        values.ingredients.map((ingredient, ikey) => {
-          if (!Boolean(ingredient.value)) {
-            errors[
-              `Ingredient ${ikey + 1}`
-            ] = `Please enter the name of Ingredient ${ikey + 1}`;
-          } else if (!Boolean(ingredient.units)) {
-            errors[
-              `Ingredient ${ikey + 1}`
-            ] = `Please enter the units of Ingredient ${ikey + 1}`;
-          }
-        });
-      }
-    } else if (selectedField == "Steps") {
-      values.steps.map((step, skey) => {
-        if (!Boolean(step.value)) {
-          errors[`Step ${skey + 1}`] = `Please fill Step ${skey + 1}`;
-        }
-      });
-    } else if (selectedField == "Final Step") {
-      if (!Boolean(selectedRecipe.finish.value)) {
-        errors[`Value`] = `Please fill the final step`;
-      }
-    }
-    return errors;
-  };
+  const handleGoBack = () => navigate(-1);
 
-  const handleUpdate = (type, val) => {
-    const taskDocRef = doc(db, "recipes", recipe._id);
-    console.log(selectedField, selectedRecipe.finish);
-    try {
-      if (Object.values(handleValidation(selectedRecipe)).length !== 0) {
-        setErrorText(Object.values(handleValidation(selectedRecipe))[0]);
-        setErrorSnackOpen(true);
-      } else {
-        setLoader(true);
-        let recipe_obj = null;
-        if (selectedField == "Title") {
-          recipe_obj = {
-            title: selectedRecipe.title,
-            title_keywords: getAllSubstrings(selectedRecipe?.title),
-          };
-        } else if (selectedField == "Type & Serves") {
-          recipe_obj = {
-            type: selectedRecipe.type,
-            serves: selectedRecipe.serves,
-          };
-        } else if (selectedField == "Ingredients") {
-          recipe_obj = {
-            ingredients: [...selectedRecipe.ingredients],
-          };
-        } else if (selectedField == "Steps") {
-          recipe_obj = {
-            steps: [...selectedRecipe.steps],
-          };
-        } else if (selectedField == "Final Step" || type == "image") {
-          recipe_obj = {
-            finish: {...selectedRecipe.finish},
-          };
-          if(type){
-            recipe_obj = {
-              finish: {...selectedRecipe.finish, imgSrc: val},
-            };
-
-          }
-        }
-        console.log(recipe_obj);
-        if (recipe_obj) {
-          updateDoc(taskDocRef, recipe_obj)
-            .then((res) => {
-              setSuccessSnackOpen(true);
-              setSuccessText("Updated Successfully!!!");
-              setLoader(false);
-              viewRecipe(id);
-              handleClose();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      alert(error.message);
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
+    setErrorSnackOpen(false);
+    setSuccessSnackOpen(false);
   };
 
   return (
@@ -635,8 +634,8 @@ const RecipeDetails = () => {
                 top: 5,
                 right: 5,
                 [bpSMd]: {
-                  flexDirection: "column"
-                }
+                  flexDirection: "column",
+                },
               }}
             >
               <Tooltip title="Add to favourite">
@@ -658,22 +657,20 @@ const RecipeDetails = () => {
               </Tooltip>
               <Tooltip title="Change Image">
                 <IconButton
-                component="label"
+                  component="label"
                   size="large"
                   sx={{
                     backgroundColor: "rgba(0,0,0,0.2) !important",
                   }}
                 >
-                  <CameraAltIcon sx={{color:"white"}} />
-                    <input
-                      hidden
-                      accept="image/*"
-                      type="file"
-                      name="imgSrc"
-                      onChange={(e) =>
-                        handleFinish(e.target.files[0], "image")
-                      }
-                    />
+                  <CameraAltIcon sx={{ color: "white" }} />
+                  <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    name="imgSrc"
+                    onChange={(e) => handleFinish(e.target.files[0], "image")}
+                  />
                 </IconButton>
               </Tooltip>
             </Stack>

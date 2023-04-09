@@ -2,14 +2,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  Stack,
-  Typography
-} from "@mui/material";
+import { Box, Button, Divider, Grid, Stack, Typography } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +31,7 @@ import { getIsMobile, handleNext } from "../../redux/slices/userSlice";
 const PrimaryDetails = (props) => {
   const [errorText, setErrorText] = useState(false);
   const [snackopen, setsnackOpen] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const recipe = useSelector(getRecipe);
@@ -59,20 +53,6 @@ const PrimaryDetails = (props) => {
   const handleIngredientChanges = (id, e, name, type) => {
     const { value } = e.target;
     dispatch(editItem({ id, name, value, type }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (Object.values(handleValidation(recipe)).length !== 0) {
-      setErrorText(Object.values(handleValidation(recipe))[0]);
-      setsnackOpen(true);
-    } else {
-      dispatch(handlePrimitiveState({ name: "id", value: getUniqueId() }));
-      dispatch(
-        handlePrimitiveState({ name: "createdAt", value: moment().format() })
-      );
-      dispatch(handleNext());
-    }
   };
 
   const handleAdd = () => {
@@ -112,6 +92,20 @@ const PrimaryDetails = (props) => {
       });
     }
     return errors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (Object.values(handleValidation(recipe)).length !== 0) {
+      setErrorText(Object.values(handleValidation(recipe))[0]);
+      setsnackOpen(true);
+    } else {
+      dispatch(handlePrimitiveState({ name: "id", value: getUniqueId() }));
+      dispatch(
+        handlePrimitiveState({ name: "createdAt", value: moment().format() })
+      );
+      dispatch(handleNext());
+    }
   };
 
   return (

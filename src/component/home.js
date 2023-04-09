@@ -1,17 +1,17 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Fab } from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import Dashboard from "./Recipe/dashboard";
-import { initialState, setSelectedRecipe } from "../redux/slices/recipeSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { initialState, setSelectedRecipe } from "../redux/slices/recipeSlice";
+import Dashboard from "./Recipe/dashboard";
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   return (
     <Box sx={{ position: "relative" }}>
-      <Dashboard/>
+      <Dashboard />
       <Fab
         color="primary"
         aria-label="add"
@@ -22,7 +22,7 @@ const Home = () => {
         }}
         onClick={() => {
           dispatch(setSelectedRecipe(initialState));
-          navigate("/add")
+          navigate("/add");
         }}
       >
         <AddIcon />

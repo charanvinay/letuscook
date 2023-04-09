@@ -5,8 +5,10 @@ import ImageIcon from "@mui/icons-material/Image";
 import LoopIcon from "@mui/icons-material/Loop";
 import SaveIcon from "@mui/icons-material/Save";
 import {
-  AppBar, Box,
-  Button, Dialog,
+  AppBar,
+  Box,
+  Button,
+  Dialog,
   Divider,
   Grid,
   IconButton,
@@ -14,18 +16,12 @@ import {
   Slide,
   Stack,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes
-} from "firebase/storage";
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { bottomButtonsStyle, getAllSubstrings } from "../../Common/Constants";
@@ -35,21 +31,21 @@ import ImgWithLabelCard from "../../Common/ImgWithLabelCard";
 import CKeditor from "../../Common/Skeletons/CKeditor";
 import Step from "../../Common/Skeletons/Step";
 import SuccessAlert from "../../Common/SuccessAlert";
+import deletePreviousImage from "../../Common/deletePreviousImage";
 import {
   editFinish,
   getRecipe,
   initialState,
-  setSelectedRecipe
+  setSelectedRecipe,
 } from "../../redux/slices/recipeSlice";
 import {
   getIsMobile,
   getLoggedUser,
   handleBack,
-  handleReset
+  handleReset,
 } from "../../redux/slices/userSlice";
 import { db, storage } from "../../services/firebase";
 import CompleteRecipe from "./complete_recipe";
-import deletePreviousImage from "../../Common/deletePreviousImage";
 
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
@@ -58,15 +54,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Finish = (props) => {
+  const [loading, setLoading] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [errorText, setErrorText] = useState(false);
   const [successText, setSuccessText] = useState(false);
-  const [errorSnackOpen, setErrorSnackOpen] = useState(false);
-  const [successSnackOpen, setSuccessSnackOpen] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [displayEditors, setDisplayEditors] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [timeoutId, setTimeoutId] = useState(null);
+  const [errorSnackOpen, setErrorSnackOpen] = useState(false);
+  const [successSnackOpen, setSuccessSnackOpen] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -147,17 +144,6 @@ const Finish = (props) => {
     handleClickOpen();
   };
 
-  const handleValidation = () => {
-    let errors = {};
-    if (!Boolean(recipe.finish.value)) {
-      errors["Value"] = "Please fill the final step";
-    }
-    if (!Boolean(recipe.finish.imgSrc)) {
-      errors["imageSrc"] = "Please upload the final image";
-    }
-    return errors;
-  };
-
   const customSetTimeout = (navTo) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -171,6 +157,17 @@ const Finish = (props) => {
     }, 1500);
 
     setTimeoutId(newTimeoutId);
+  };
+
+  const handleValidation = () => {
+    let errors = {};
+    if (!Boolean(recipe.finish.value)) {
+      errors["Value"] = "Please fill the final step";
+    }
+    if (!Boolean(recipe.finish.imgSrc)) {
+      errors["imageSrc"] = "Please upload the final image";
+    }
+    return errors;
   };
 
   const handleSave = () => {
@@ -197,6 +194,7 @@ const Finish = (props) => {
       console.log(error);
     }
   };
+
   const handleUpdate = () => {
     setLoading(true);
     const taskDocRef = doc(db, "recipes", recipe._id);
