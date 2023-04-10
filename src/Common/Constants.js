@@ -185,3 +185,7 @@ export const steps = [
     label: "Finishing touch",
   },
 ];
+
+export const capitalize = (str)=>{
+  return str.toLowerCase().replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
+}

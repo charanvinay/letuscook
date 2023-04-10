@@ -32,6 +32,7 @@ import { BookLoaderComponent } from "../../Common/BookLoader";
 import CSTMSelect from "../../Common/CSTMSelect";
 import CSTMTextField from "../../Common/CSTMTextField";
 import {
+  capitalize,
   getAllSubstrings,
   getUniqueId,
   recipeServes,
@@ -134,6 +135,7 @@ const RecipeDetails = () => {
           dispatch(setActiveTab(1));
           setRecipe({ _id: id, ...docSnap.data() });
           dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
+          document.title = `${capitalize(docSnap.data().title)} | LetUsCook`;
           setLoading(false);
         })
         .catch((err) => {
@@ -662,24 +664,26 @@ const RecipeDetails = () => {
                   )}
                 </IconButton>
               </Tooltip>
-              {loggedUser.uid === recipe.uid && <Tooltip title="Change Image">
-                <IconButton
-                  component="label"
-                  size="large"
-                  sx={{
-                    backgroundColor: "rgba(0,0,0,0.2) !important",
-                  }}
-                >
-                  <CameraAltIcon sx={{ color: "white" }} />
-                  <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    name="imgSrc"
-                    onChange={(e) => handleFinish(e.target.files[0], "image")}
-                  />
-                </IconButton>
-              </Tooltip>}
+              {loggedUser.uid === recipe.uid && (
+                <Tooltip title="Change Image">
+                  <IconButton
+                    component="label"
+                    size="large"
+                    sx={{
+                      backgroundColor: "rgba(0,0,0,0.2) !important",
+                    }}
+                  >
+                    <CameraAltIcon sx={{ color: "white" }} />
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      name="imgSrc"
+                      onChange={(e) => handleFinish(e.target.files[0], "image")}
+                    />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Stack>
             <Box
               sx={{
@@ -1038,6 +1042,26 @@ const RecipeDetails = () => {
             scroll="paper"
             fullWidth={true}
             maxWidth="md"
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 9999,
+              "& .MuiDialogContent-root": {
+                width: "50vw",
+              },
+              [bpSMd]: {
+                "& .MuiDialogContent-root": {
+                  width: "70vw",
+                  maxHeight: "40vh",
+                },
+              },
+            }}
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
           >

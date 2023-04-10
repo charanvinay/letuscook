@@ -4,7 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
-import { theme } from "./Common/Constants";
+import { capitalize, theme } from "./Common/Constants";
 import Profile from "./component/Profile/profile";
 import RecipeDetails from "./component/Profile/recipe_details";
 import AddRecipe from "./component/Recipe/add";
@@ -23,6 +23,20 @@ function App() {
       navigate("/");
     }
   }, [loggedUser]);
+
+  useEffect(() => {
+    if(location.pathname=="/favourites"){
+      document.title = "Favourites | LetUsCook"
+    }else if(location.pathname=="/add"){
+      document.title = "Add Recipe | LetUsCook"
+    }else if(location.pathname == "/profile"){
+      document.title = `${capitalize(loggedUser.name)} | LetUsCook`
+    }
+    else{
+      document.title = "LetUsCook"
+    }
+  }, [location.pathname])
+  
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
