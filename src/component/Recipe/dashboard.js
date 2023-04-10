@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -32,7 +32,8 @@ const Dashboard = (props) => {
           "title_keywords",
           "array-contains",
           filtersState.searchText?.toLowerCase()
-        )
+        ),
+        orderBy('createdAt', 'desc')
       );
       let user_docs = await getDocs(user_ref);
       if (user_docs.docs.length > 0) {
