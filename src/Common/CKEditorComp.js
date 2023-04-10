@@ -34,11 +34,8 @@ const formats = [
 ];
 
 const CKEditorComp = (props) => {
-  const [editorHtml, setEditorHtml] = useState(props.value || null);
-  
   const handleChange = (html) => {
     console.log(html);
-    setEditorHtml(html);
     props.handleChanges(html);
   };
   return (
@@ -62,7 +59,7 @@ const CKEditorComp = (props) => {
     <ReactQuill
       theme="snow"
       onChange={handleChange}
-      value={editorHtml}
+      value={props.value}
       modules={modules}
       formats={formats}
       // bounds={".app"}
