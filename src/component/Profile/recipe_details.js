@@ -1028,7 +1028,7 @@ const RecipeDetails = () => {
           />
           <Dialog
             open={open}
-            onClose={handleClose}
+            // onClose={handleClose}
             scroll="paper"
             fullWidth={true}
             maxWidth="md"
