@@ -24,7 +24,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { bottomButtonsStyle, getAllSubstrings } from "../../Common/Constants";
+import { bottomButtonsStyle, getAllSubstrings, getUniqueId } from "../../Common/Constants";
 import CustomBackdrop from "../../Common/CustomBackdrop";
 import ErrorAlert from "../../Common/ErrorAlert";
 import ImgWithLabelCard from "../../Common/ImgWithLabelCard";
@@ -106,7 +106,7 @@ const Finish = (props) => {
   };
 
   const handleUploadImage = (file, type) => {
-    const storageRef = ref(storage, `images/${loggedUser.uid}/${file.name}`);
+    const storageRef = ref(storage, `images/${loggedUser.uid}/${getUniqueId()}`);
     uploadBytes(storageRef, file)
       .then((snapshot) => {
         getDownloadURL(snapshot.ref)
@@ -259,6 +259,7 @@ const Finish = (props) => {
                       minWidth: "20px",
                       color: grey[700],
                       padding: "0px 6px",
+                      zIndex: 2
                     }}
                   >
                     <ImageIcon color="black" />

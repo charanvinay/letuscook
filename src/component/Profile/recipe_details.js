@@ -225,7 +225,7 @@ const RecipeDetails = () => {
   };
 
   const handleUploadImage = (file, type) => {
-    const storageRef = ref(storage, `images/${loggedUser.uid}/${file.name}`);
+    const storageRef = ref(storage, `images/${loggedUser.uid}/${getUniqueId()}`);
     uploadBytes(storageRef, file)
       .then((snapshot) => {
         getDownloadURL(snapshot.ref)
