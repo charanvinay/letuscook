@@ -102,3 +102,32 @@ thead tr th{
   justify-content: space-between;
   align-items: center;
 }
+
+.ql-container {
+  border-bottom-left-radius: 0.4em;
+  border-bottom-right-radius: 0.4em;
+  background: white;
+}
+
+/* Snow Theme */
+.ql-snow.ql-toolbar {
+  display: block;
+  background: #f5f5f5;
+  border-top-left-radius: 0.4em;
+  border-top-right-radius: 0.4em;
+}
+
+/* Bubble Theme */
+.ql-bubble .ql-editor {
+  border: 1px solid #ccc;
+  border-radius: 0.4em;
+}
+
+.ql-editor {
+  min-height: 80px;
+}
+
+.themeSwitcher {
+  margin-top: 0.5em;
+  font-size: small;
+}
