@@ -131,3 +131,18 @@ thead tr th{
   margin-top: 0.5em;
   font-size: small;
 }
+.ql-snow .ql-editor blockquote, blockquote{
+  border-left: 5px solid #176ede;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 6px;
+  padding-left: 16px;
+  background: rgb(215, 230, 249);
+  border-radius: 5px;
+}
+
+@media screen and (min-width: 768px) {
+  .ql-editor{
+    font-size: 18px;
+  }
+}

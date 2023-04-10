@@ -1,15 +1,14 @@
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 
 const modules = {
   toolbar: [
-    ["bold", "italic", "underline", "strike", "blockquote"],
     [
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "blockquote",
       { list: "ordered" },
       { list: "bullet" },
     ],

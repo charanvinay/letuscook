@@ -1,5 +1,6 @@
 import { ThemeProvider, Toolbar } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
@@ -14,7 +15,7 @@ import { store } from "./redux/store";
 
 function App() {
   const location = useLocation();
-  const showNav = !["/", "/view"].includes(location.pathname)
+  const showNav = !["/", "/view"].includes(location.pathname);
 
   return (
     <ThemeProvider theme={theme}>
