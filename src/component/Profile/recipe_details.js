@@ -206,6 +206,7 @@ const RecipeDetails = () => {
     if (type === "image") {
       let file = val;
       if (!file) return;
+      setLoader(true);
       if (selectedRecipe.finish.imgSrc) {
         deletePreviousImage(selectedRecipe.finish.imgSrc);
       }
@@ -655,7 +656,7 @@ const RecipeDetails = () => {
                   )}
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Change Image">
+              {loggedUser.uid === recipe.uid && <Tooltip title="Change Image">
                 <IconButton
                   component="label"
                   size="large"
@@ -672,7 +673,7 @@ const RecipeDetails = () => {
                     onChange={(e) => handleFinish(e.target.files[0], "image")}
                   />
                 </IconButton>
-              </Tooltip>
+              </Tooltip>}
             </Stack>
             <Box
               sx={{
