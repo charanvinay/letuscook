@@ -110,7 +110,7 @@ const Dashboard = (props) => {
           <Grid container spacing={3}>
             {recipesList?.map((recipe) => {
               return (
-                <Grid item xs={12} md={4} key={recipe._id}>
+                <Grid item xs={12} sm={6} md={4} key={recipe._id}>
                   <RecipeCard
                     key={recipe._id}
                     recipe={recipe}
