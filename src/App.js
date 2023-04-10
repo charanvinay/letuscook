@@ -1,8 +1,8 @@
 import { ThemeProvider, Toolbar } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
 import { theme } from "./Common/Constants";
 import Profile from "./component/Profile/profile";
@@ -15,8 +15,14 @@ import { store } from "./redux/store";
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate()
   const showNav = !["/", "/view"].includes(location.pathname);
-
+  const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  useEffect(() => {
+    if (!loggedUser) {
+      navigate("/");
+    }
+  }, [loggedUser]);
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
@@ -28,7 +34,6 @@ function App() {
           <Route path="/favourites" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/add" element={<AddRecipe />} />
-          <Route path="/edit" element={<AddRecipe />} />
           <Route path="/view" element={<RecipeDetails />} />
         </Routes>
       </Provider>

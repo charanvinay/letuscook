@@ -96,6 +96,12 @@ const RecipeDetails = () => {
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
   useEffect(() => {
+    if (!loggedUser) {
+      return navigate("/");
+    }
+  }, [loggedUser]);
+  
+  useEffect(() => {
     // console.log(id);
     if (id) {
       getRecipeDetails(id);
