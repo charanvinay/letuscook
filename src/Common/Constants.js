@@ -137,7 +137,14 @@ export const theme = createTheme({
       styles: {
         fontSize: "20px",
       },
-    }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontFamily: "Poppins, sans-serif !important"
+        },
+      },
+    },
   },
 });
 
