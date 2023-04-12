@@ -320,7 +320,7 @@ const RecipeDetails = () => {
           recipe_obj = {
             finish: { ...selectedRecipe.finish },
           };
-          if (type) {
+          if (type=="image") {
             recipe_obj = {
               finish: { ...selectedRecipe.finish, imgSrc: val },
             };
@@ -1042,26 +1042,6 @@ const RecipeDetails = () => {
             scroll="paper"
             fullWidth={true}
             maxWidth="md"
-            sx={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 9999,
-              "& .MuiDialogContent-root": {
-                width: "50vw",
-              },
-              [bpSMd]: {
-                "& .MuiDialogContent-root": {
-                  width: "70vw",
-                  maxHeight: "40vh",
-                },
-              },
-            }}
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
           >
