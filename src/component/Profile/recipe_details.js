@@ -96,12 +96,12 @@ const RecipeDetails = () => {
   const id = new URLSearchParams(search).get("id");
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-  useEffect(() => {
-    if (!loggedUser) {
-      return navigate("/");
-    }
-  }, [loggedUser]);
-  
+  // useEffect(() => {
+  //   if (!loggedUser) {
+  //     return navigate("/login");
+  //   }
+  // }, [loggedUser]);
+
   useEffect(() => {
     // console.log(id);
     if (id) {
@@ -118,8 +118,8 @@ const RecipeDetails = () => {
 
   useEffect(() => {
     if (recipe && recipe.favouritedBy) {
-      console.log(recipe.favouritedBy, loggedUser.uid);
-      let cond = recipe.favouritedBy.includes(loggedUser.uid);
+      console.log(recipe.favouritedBy, loggedUser?.uid);
+      let cond = recipe.favouritedBy.includes(loggedUser?.uid);
       console.log(cond);
       setLiked(cond);
     }
@@ -225,7 +225,10 @@ const RecipeDetails = () => {
   };
 
   const handleUploadImage = (file, type) => {
-    const storageRef = ref(storage, `images/${loggedUser.uid}/${getUniqueId()}`);
+    const storageRef = ref(
+      storage,
+      `images/${loggedUser.uid}/${getUniqueId()}`
+    );
     uploadBytes(storageRef, file)
       .then((snapshot) => {
         getDownloadURL(snapshot.ref)
@@ -320,7 +323,7 @@ const RecipeDetails = () => {
           recipe_obj = {
             finish: { ...selectedRecipe.finish },
           };
-          if (type=="image") {
+          if (type == "image") {
             recipe_obj = {
               finish: { ...selectedRecipe.finish, imgSrc: val },
             };
@@ -664,7 +667,7 @@ const RecipeDetails = () => {
                   )}
                 </IconButton>
               </Tooltip>
-              {loggedUser.uid === recipe.uid && (
+              {loggedUser?.uid === recipe?.uid && (
                 <Tooltip title="Change Image">
                   <IconButton
                     component="label"
@@ -769,7 +772,7 @@ const RecipeDetails = () => {
                             justifyContent="space-between"
                           >
                             <HeadingXLBold text={recipe.title} />
-                            {loggedUser.uid === recipe.uid && (
+                            {loggedUser?.uid === recipe?.uid && (
                               <EditOutlineBTN
                                 onClick={() => handleEditRecipe("Title")}
                               />
@@ -788,7 +791,7 @@ const RecipeDetails = () => {
                               {returnType(recipe.type)}
                               <Serves serves={recipe.serves} />
                             </Stack>
-                            {loggedUser.uid === recipe.uid && (
+                            {loggedUser?.uid === recipe?.uid && (
                               <EditOutlineBTN
                                 onClick={() =>
                                   handleEditRecipe("Type & Serves")
@@ -833,7 +836,7 @@ const RecipeDetails = () => {
                             sx={{ margin: "20px 0 10px 0" }}
                           >
                             <HeadingMD text={"INGREDIENTS"} width={70} />
-                            {loggedUser.uid === recipe.uid && (
+                            {loggedUser?.uid === recipe?.uid && (
                               <EditOutlineBTN
                                 onClick={() => handleEditRecipe("Ingredients")}
                               />
@@ -865,7 +868,7 @@ const RecipeDetails = () => {
                               text={"LIST OF INGREDIENTS"}
                               width={70}
                             />
-                            {loggedUser.uid === recipe.uid && (
+                            {loggedUser?.uid === recipe?.uid && (
                               <EditOutlineBTN
                                 onClick={() => handleEditRecipe("Ingredients")}
                               />
@@ -939,7 +942,7 @@ const RecipeDetails = () => {
                             sx={{ margin: "25px 0px 15px 0px" }}
                           >
                             <HeadingMD text={"STEPS"} width={35} />
-                            {loggedUser.uid === recipe.uid && (
+                            {loggedUser?.uid === recipe?.uid && (
                               <EditOutlineBTN
                                 onClick={() => handleEditRecipe("Steps")}
                               />
@@ -983,7 +986,7 @@ const RecipeDetails = () => {
                             sx={{ margin: "20px 0 10px 0" }}
                           >
                             <HeadingMD text={"FINAL STEP"} width={50} />
-                            {loggedUser.uid === recipe.uid && (
+                            {loggedUser?.uid === recipe?.uid && (
                               <EditOutlineBTN
                                 onClick={() => handleEditRecipe("Final Step")}
                               />
