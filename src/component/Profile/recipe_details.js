@@ -69,6 +69,7 @@ import {
 } from "../../redux/slices/userSlice";
 import { db, storage } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
+import DynamicMetaTags from "../../Common/CustomHooks/useDynamicMetaTags";
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
 const RecipeDetails = () => {
@@ -136,8 +137,6 @@ const RecipeDetails = () => {
           dispatch(setActiveTab(1));
           setRecipe({ _id: id, ...docSnap.data() });
           dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
-          document.title = `${capitalize(docSnap.data().title)} | LetUsCook`;
-          document.description = `Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`;
           setLoading(false);
         })
         .catch((err) => {
@@ -599,6 +598,7 @@ const RecipeDetails = () => {
         <BookLoaderComponent height={"90vh"} />
       ) : (
         <>
+          <DynamicMetaTags title={`${capitalize(recipe.title)} | LetUsCook`} description={`Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`} />
           <Box
             className="fixed-image"
             sx={{ width: "100%", height: isMobile ? 300 : 250 }}
