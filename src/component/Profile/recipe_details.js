@@ -581,7 +581,7 @@ const RecipeDetails = () => {
   const handleShare = async () => {
     try {
       const shareData = {
-        title: recipe.name,
+        title: recipe.title,
         text: `Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`,
         url: window.location.href
       };
