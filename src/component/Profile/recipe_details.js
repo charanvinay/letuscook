@@ -137,6 +137,7 @@ const RecipeDetails = () => {
           setRecipe({ _id: id, ...docSnap.data() });
           dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
           document.title = `${capitalize(docSnap.data().title)} | LetUsCook`;
+          document.description = `Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`;
           setLoading(false);
         })
         .catch((err) => {
