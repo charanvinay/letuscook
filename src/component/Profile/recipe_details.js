@@ -3,6 +3,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Box,
@@ -577,6 +578,20 @@ const RecipeDetails = () => {
     setSuccessSnackOpen(false);
   };
 
+  const handleShare = async () => {
+    try {
+      const shareData = {
+        title: recipe.name,
+        text: `Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`,
+        url: window.location.href
+      };
+      await navigator.share(shareData);
+      console.log('Content shared successfully');
+    } catch (error) {
+      console.error('Error sharing content:', error);
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -687,6 +702,17 @@ const RecipeDetails = () => {
                   </IconButton>
                 </Tooltip>
               )}
+              <Tooltip title="Share Recipe">
+                <IconButton
+                  size="large"
+                  onClick={handleShare}
+                  sx={{
+                    backgroundColor: "rgba(0,0,0,0.2) !important",
+                  }}
+                >
+                  <ShareIcon sx={{ color: "white" }} />
+                </IconButton>
+              </Tooltip>
             </Stack>
             <Box
               sx={{
