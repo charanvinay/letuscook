@@ -8,7 +8,7 @@
       "type": "image/x-icon"
     },
     {
-      "src": "1024.png",
+      "src": "launcher_white.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
@@ -21,6 +21,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#176ede",
-  "background_color": "#176ede"
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
 }
