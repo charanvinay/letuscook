@@ -10,7 +10,8 @@
     {
       "src": "launcher_white.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo_lg.png",
