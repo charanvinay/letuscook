@@ -583,7 +583,7 @@ const RecipeDetails = () => {
     try {
       const shareData = {
         title: recipe.title,
-        text: `Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`,
+        text: `Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"} made by ${capitalize(recipe.name)}`,
         url: window.location.href
       };
       await navigator.share(shareData);
