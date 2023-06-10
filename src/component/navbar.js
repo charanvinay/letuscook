@@ -64,6 +64,7 @@ function Navbar() {
     } else if (setting === "Logout") {
       logOut();
       localStorage.removeItem("loggedUser");
+      dispatch(handleLoggedUser({}));
     }
     dispatch(setSearchText({ searchText: "" }));
     setAnchorElUser(null);

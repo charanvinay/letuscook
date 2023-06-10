@@ -97,7 +97,8 @@ const RecipeDetails = () => {
   const bpSMd = theme.breakpoints.down("md");
   const id = new URLSearchParams(search).get("id");
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-
+  const isLoggedIn = Boolean(loggedUser) && Boolean(loggedUser.uid);
+  console.log(isLoggedIn);
   // useEffect(() => {
   //   if (!loggedUser) {
   //     return navigate("/login");
@@ -666,7 +667,7 @@ const RecipeDetails = () => {
                 },
               }}
             >
-              <Tooltip title="Add to favourite">
+              {loggedUser && loggedUser.uid && <Tooltip title="Add to favourite">
                 <IconButton
                   size="large"
                   sx={{
@@ -682,7 +683,7 @@ const RecipeDetails = () => {
                     />
                   )}
                 </IconButton>
-              </Tooltip>
+              </Tooltip>}
               {loggedUser?.uid === recipe?.uid && (
                 <Tooltip title="Change Image">
                   <IconButton

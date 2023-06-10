@@ -214,7 +214,7 @@ const RecipeCard = (props) => {
             src={GradientBLACK}
           />
         </Card>
-        <Tooltip title="Add to favourite">
+        {loggedUser && loggedUser.uid && <Tooltip title={props?.uid === uid ? "Delete Recipe" : "Add to favourite"}>
           <IconButton
             size="large"
             sx={{
@@ -239,7 +239,7 @@ const RecipeCard = (props) => {
               <FavoriteBorderIcon sx={{ fontSize: "1.5rem", color: "white" }} />
             )}
           </IconButton>
-        </Tooltip>
+        </Tooltip>}
         <Stack
           sx={{ position: "absolute", top: 8, left: 8 }}
           direction="row"
