@@ -13,7 +13,7 @@ function HeadingXLBold(props) {
         textTransform: "uppercase",
         fontWeight: "bold",
         letterSpacing: 2,
-        color: "text.primary",
+        color: props.color || "text.primary",
         fontFamily: "Product Sans Bold",
         margin: "0px 0px 5px 0px",
         [bpSMd]: { fontSize: "30px", margin:"0px 0px 10px 0px" },

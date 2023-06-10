@@ -147,8 +147,24 @@ thead tr th{
   border-color: rgb(169 168 168 / 12%) !important;
 }
 
+.not-found{
+  width: 30%;
+  /* height: 30%; */
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 @media screen and (min-width: 768px) {
   .ql-editor{
     font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .not-found{
+    width: 90%;
+    /* height: 60% */
   }
 }

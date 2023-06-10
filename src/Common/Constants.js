@@ -194,5 +194,5 @@ export const steps = [
 ];
 
 export const capitalize = (str)=>{
-  return str.toLowerCase().replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
+  return str?.toLowerCase().replace(/(^|\s)\S/g, (letter) => letter?.toUpperCase());
 }

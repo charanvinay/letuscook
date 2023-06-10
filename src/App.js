@@ -12,11 +12,12 @@ import Home from "./component/home";
 import Login from "./component/login";
 import Navbar from "./component/navbar";
 import { store } from "./redux/store";
+import PageNotFound from "./Common/PageNotFound";
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const showNav = !["/login", "/view"].includes(location.pathname);
+  const showNav = ["/home", "/favourites", "/profile", "/add"].includes(location.pathname);
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
   // useEffect(() => {
   //   if (!loggedUser) {
@@ -77,6 +78,7 @@ function App() {
           {isLoggedIn && <Route path="/profile" element={<Profile />} />}
           {isLoggedIn && <Route path="/add" element={<AddRecipe />} />}
           <Route path="/view" element={<RecipeDetails />} />
+          <Route path="*" element={<PageNotFound/>}/>
         </Routes>
       </Provider>
     </ThemeProvider>

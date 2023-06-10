@@ -70,6 +70,7 @@ import {
 import { db, storage } from "../../services/firebase";
 import OtherRecipes from "./other_recipes";
 import DynamicMetaTags from "../../Common/CustomHooks/useDynamicMetaTags";
+import PageNotFound from "../../Common/PageNotFound";
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
 const RecipeDetails = () => {
@@ -78,6 +79,7 @@ const RecipeDetails = () => {
   const [liked, setLiked] = useState(false);
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [errorText, setErrorText] = useState(false);
   const [successText, setSuccessText] = useState(false);
   const [selectedField, setSelectedField] = useState(null);
@@ -108,8 +110,11 @@ const RecipeDetails = () => {
 
   useEffect(() => {
     // console.log(id);
-    if (id) {
+    if (Boolean(id)) {
       getRecipeDetails(id);
+    } else{
+      setLoading(false);
+      setNotFound(true);
     }
   }, [id]);
 
@@ -135,19 +140,25 @@ const RecipeDetails = () => {
     try {
       getDoc(docRef)
         .then((docSnap) => {
-          // console.log(docSnap.data());
-          dispatch(setActiveTab(1));
-          setRecipe({ _id: id, ...docSnap.data() });
-          dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
+          let data = docSnap.data();
+          if(data){
+            dispatch(setActiveTab(1));
+            setRecipe({ _id: id, ...docSnap.data() });
+            dispatch(setSelectedRecipe({ _id: id, ...docSnap.data() }));
+          }else{
+            setNotFound(true);
+          }
           setLoading(false);
         })
         .catch((err) => {
           console.log(err);
           setLoading(false);
+          setNotFound(true);
         });
     } catch (error) {
       console.log(error);
       setLoading(false);
+      setNotFound(true);
     }
   };
 
@@ -605,7 +616,9 @@ const RecipeDetails = () => {
       {loading ? (
         <BookLoaderComponent height={"90vh"} />
       ) : (
-        <>
+        notFound ?
+          <PageNotFound/>
+        :<>
           <DynamicMetaTags title={`${capitalize(recipe.title)} | LetUsCook`} description={`Check out this yummy ${recipe.type} recipe that serves ${recipe.serves} ${recipe.serves > 1 ? "persons" : "person"}`} />
           <Box
             className="fixed-image"
@@ -621,7 +634,7 @@ const RecipeDetails = () => {
               }}
             >
               <img
-                src={recipe.finish.imgSrc}
+                src={recipe?.finish?.imgSrc}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 loading="lazy"
                 alt="Recipe Image"

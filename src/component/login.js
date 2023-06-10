@@ -12,6 +12,8 @@ import { BookLoaderComponent } from "../Common/BookLoader";
 import CustomBackdrop from "../Common/CustomBackdrop";
 import { bgSecondary, primary } from "../Common/Pallete";
 import { auth, signInWithGoogle } from "../services/firebase";
+import RingLG from "../Common/Shapes/RingLG";
+import CircleLG from "../Common/Shapes/CircleLG";
 
 function Login() {
   const [timeoutId, setTimeoutId] = useState(null);
@@ -69,46 +71,8 @@ function Login() {
             backgroundColor: bgSecondary,
           }}
         >
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: [0.9, 1] }}
-            transition={{
-              duration: 0.5,
-              ease: "easeInOut",
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: -60,
-                left: -100,
-                width: 200,
-                height: 200,
-                borderRadius: "50%",
-                border: "50px solid " + primary,
-              }}
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: [0.9, 1] }}
-            transition={{
-              duration: 0.5,
-              ease: "easeInOut",
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                top: -150,
-                right: -150,
-                width: 400,
-                height: 400,
-                borderRadius: "50%",
-                backgroundColor: primary,
-              }}
-            />
-          </motion.div>
+          <RingLG />
+          <CircleLG />
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ y: [20, 0], opacity: [1] }}
