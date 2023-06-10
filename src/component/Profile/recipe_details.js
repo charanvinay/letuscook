@@ -88,7 +88,8 @@ const RecipeDetails = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const search = useLocation().search;
+  const location = useLocation();
+  const search = location.search;
 
   const isMobile = useSelector(getIsMobile);
   const activeTab = useSelector(getActiveTab);
@@ -569,7 +570,13 @@ const RecipeDetails = () => {
     }
   };
 
-  const handleGoBack = () => navigate(-1);
+  const handleGoBack = () => {
+    if (location.state && location.state.previousRoute) {
+      navigate(-1);
+    } else {
+      navigate('/home');
+    }
+  };
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {

@@ -23,7 +23,7 @@ import { motion } from "framer-motion";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import GradientBLACK from "../../Assets/20210113_083213.png";
 import { returnType } from "../../Common/Constants";
 import Serves from "../../Common/Ribbons/Serves";
@@ -43,6 +43,7 @@ const RecipeCard = (props) => {
   const [favouritedBy, setFavouritedBy] = useState(recipe.favouritedBy);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const loggedUser = useSelector(getLoggedUser);
 
   useEffect(() => {
@@ -139,7 +140,7 @@ const RecipeCard = (props) => {
               "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
           }}
           onClick={() => {
-            navigate(navTo);
+            navigate(navTo, { state: { previousRoute: location.pathname }});
           }}
         >
           <Box sx={{ height: 300 }}>
