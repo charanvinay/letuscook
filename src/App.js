@@ -73,12 +73,13 @@ function App() {
         {showNav && <Toolbar />}
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           {isLoggedIn && <Route path="/favourites" element={<Home />} />}
           {isLoggedIn && <Route path="/profile" element={<Profile />} />}
           {isLoggedIn && <Route path="/add" element={<AddRecipe />} />}
           <Route path="/view" element={<RecipeDetails />} />
-          <Route path="*" element={<PageNotFound/>}/>
+          {location.pathname && <Route path="*" element={<PageNotFound/>}/>}
         </Routes>
       </Provider>
     </ThemeProvider>
