@@ -61,7 +61,7 @@ function App() {
     }
   }, [location.pathname]);
   
-  const showNav = ["/", "/home", "/favourites", "/profile", "/add"].includes(location.pathname);
+  const showNav = ["", "home", "favourites", "profile", "add"].includes(location.pathname.split("/")[1]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,7 +73,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           {isLoggedIn && <Route path="/favourites" element={<Home />} />}
-          {isLoggedIn && <Route path="/profile" element={<Profile />} />}
+          {isLoggedIn && <Route path="/profile/:id" element={<Profile />} />}
           {isLoggedIn && <Route path="/add" element={<AddRecipe />} />}
           <Route path="/view" element={<RecipeDetails />} />
           {location.pathname && <Route path="*" element={<PageNotFound/>}/>}

@@ -1,10 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Fab } from "@mui/material";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getLoggedUser } from "../../redux/slices/userSlice";
 import { db } from "../../services/firebase";
 import Dashboard from "../Recipe/dashboard";
@@ -13,15 +13,29 @@ import ProfileCard from "./profile_card";
 const Profile = () => {
   const [recipesCount, setRecipesCount] = useState(0);
   const [favouritesCount, setFavouritesCount] = useState(0);
+  const [user, setUser] = useState({})
 
   const navigate = useNavigate();
+  const { id: uid } = useParams();
   const loggedUser = useSelector(getLoggedUser);
 
   useEffect(() => {
-    if (loggedUser) {
+    if (uid) {
+      getUserDetails();
       getUserRecipes();
     }
-  }, [loggedUser]);
+  }, [uid]);
+
+  const getUserDetails = async () => {
+    let user_ref = query(
+      collection(db, "users"),
+      where("uid", "==", uid)
+    );
+    let user_docs = await getDocs(user_ref);
+    if (user_docs.docs.length > 0) {
+      setUser({...user_docs.docs[0].data()})
+    }
+  };
 
   const getUserRecipes = async () => {
     let user_ref = query(
@@ -34,7 +48,7 @@ const Profile = () => {
       setFavouritesCount(0);
       user_docs.docs.map((doc) => {
         let data = doc.data();
-        if (data.favouritedBy.includes(loggedUser.uid)) {
+        if (data.favouritedBy.includes(uid)) {
           setFavouritesCount((e) => e + 1);
         }
       });
@@ -53,11 +67,12 @@ const Profile = () => {
     >
       <Box sx={{ position: "relative", marginY: 2 }}>
         <ProfileCard
-          username={loggedUser.name}
+          username={user.name}
           recipesCount={recipesCount}
           favouritesCount={favouritesCount}
         />
         <Dashboard
+          uid={uid}
           recipesData={(e) => {
             setRecipesCount(e.recipe_count);
           }}

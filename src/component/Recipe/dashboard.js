@@ -22,6 +22,8 @@ const Dashboard = (props) => {
   const filtersState = useSelector(getFiltersState);
   const loggedUser = useSelector(getLoggedUser);
 
+  let current_route = location.pathname.split("/")[1]
+
   const getUserRecipes = async () => {
     setRecipesList([]);
     setLoadding(true);
@@ -46,14 +48,14 @@ const Dashboard = (props) => {
             if (data.favouritedBy.includes(loggedUser.uid)) {
               recipes.push({ _id: doc.id, ...data });
             }
-          } else if (location.pathname == "/profile") {
+          } else if (current_route == "profile") {
             let data = doc.data();
-            if (data.uid == loggedUser.uid) {
+            if (data.uid == props.uid) {
               recipes.push({ _id: doc.id, ...data });
             }
           }
         });
-        if (location.pathname == "/profile") {
+        if (current_route == "profile") {
           props.recipesData({ recipe_count: recipes.length });
         }
         if (filtersState.type) {
@@ -75,7 +77,7 @@ const Dashboard = (props) => {
 
   return (
     <Container maxWidth="lg" sx={{ paddingX: 3, paddingY: 4 }}>
-      {location.pathname != "/profile" && (
+      {current_route != "profile" && (
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: [0, 1] }}
@@ -114,9 +116,7 @@ const Dashboard = (props) => {
                   <RecipeCard
                     key={recipe._id}
                     recipe={recipe}
-                    uid={
-                      location.pathname == "/profile" ? loggedUser.uid : null
-                    }
+                    uid={props.uid}
                     navTo={`/view?id=${recipe._id}`}
                     getUserRecipes={getUserRecipes}
                   />

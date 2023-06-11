@@ -60,7 +60,7 @@ function Navbar() {
 
   const handleCloseUserMenu = (setting) => {
     if (setting === "Profile") {
-      navigate("/profile");
+      navigate(`/profile/${loggedUser.uid}`);
     } else if (setting === "Logout") {
       logOut();
       localStorage.removeItem("loggedUser");

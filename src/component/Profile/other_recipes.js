@@ -74,7 +74,9 @@ export default function OtherRecipes({ id, uid, name }) {
                     textTransform: "capitalize",
                     lineHeight: 1.6,
                     padding: 0,
+                    cursor: "pointer",
                   }}
+                  onClick={()=>navigate(`/profile/${uid}`)}
                 >
                   Other recipes of {name}
                 </ListSubheader>

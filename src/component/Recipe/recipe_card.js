@@ -215,7 +215,7 @@ const RecipeCard = (props) => {
             src={GradientBLACK}
           />
         </Card>
-        {loggedUser && loggedUser.uid && <Tooltip title={props?.uid === uid ? "Delete Recipe" : "Add to favourite"}>
+        {loggedUser && loggedUser.uid && <Tooltip title={props?.uid === loggedUser.uid ? "Delete Recipe" : "Add to favourite"}>
           <IconButton
             size="large"
             sx={{
@@ -225,14 +225,14 @@ const RecipeCard = (props) => {
               backgroundColor: "rgba(0,0,0,0.2) !important",
             }}
             onClick={(e) => {
-              if (props?.uid === uid) {
+              if (props?.uid === loggedUser.uid) {
                 handleClickOpen();
               } else {
                 handleLikeRecipe();
               }
             }}
           >
-            {props?.uid === uid ? (
+            {props?.uid === loggedUser.uid ? (
               <DeleteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
             ) : liked ? (
               <FavoriteIcon sx={{ fontSize: "1.5rem", color: "white" }} />
