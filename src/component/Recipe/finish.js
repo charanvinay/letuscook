@@ -257,7 +257,6 @@ const Finish = (props) => {
                   <input
                     accept="image/*"
                     type="file"
-                    capture
                     id="upload-image"
                     name="imgSrc"
                     style={{display: "none"}}
