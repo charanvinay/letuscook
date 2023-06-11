@@ -30,7 +30,7 @@ export default function OtherRecipes({ id, uid, name }) {
       if (user_docs.docs.length > 0) {
         let recipes = [];
         user_docs.docs.map((doc) => {
-          if (doc.id != id) {
+          if (doc.id !== id) {
             recipes.push({ _id: doc.id, ...doc.data() });
           }
         });

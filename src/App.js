@@ -28,9 +28,9 @@ function App() {
       if (!isLoggedIn) {
         navigate("/login");
       }
-    } else if (path == "/") {
+    } else if (path === "/") {
       navigate("/home");
-    } else if (path == "/login") {
+    } else if (path === "/login") {
       if (isLoggedIn) {
         navigate("/home");
       }
@@ -46,16 +46,16 @@ function App() {
       "/add": "Add Recipe | LetUsCook",
     };
     document.title = titles[location.pathname] || "LetUsCook";
-    if (location.pathname == "/profile") {
+    if (location.pathname === "/profile") {
       if (isLoggedIn) {
         console.log(loggedUser);
         document.title = `${capitalize(loggedUser.name)} | LetUsCook`;
       } else {
         navigate("/login");
       }
-    } else if (location.pathname == "/") {
+    } else if (location.pathname === "/") {
       navigate("/home");
-    } else if (location.pathname == "/login") {
+    } else if (location.pathname === "/login") {
       if (isLoggedIn) {
         navigate("/home");
       }

@@ -264,16 +264,16 @@ const RecipeDetails = () => {
 
   const handleValidation = (values) => {
     const errors = {};
-    if (selectedField == "Title" && !values.title) {
+    if (selectedField === "Title" && !values.title) {
       errors.title = "Please enter the title of your recipe";
-    } else if (selectedField == "Type & Serves") {
+    } else if (selectedField === "Type & Serves") {
       if (!values.type) {
         errors.type = "Please select the type of your recipe";
       }
       if (!values.serves) {
         errors.serves = "Please select the serves of your recipe";
       }
-    } else if (selectedField == "Ingredients") {
+    } else if (selectedField === "Ingredients") {
       if (values.ingredients.length < 1) {
         errors.description = "Add minimum one ingredient";
       } else {
@@ -289,13 +289,13 @@ const RecipeDetails = () => {
           }
         });
       }
-    } else if (selectedField == "Steps") {
+    } else if (selectedField === "Steps") {
       values.steps.map((step, skey) => {
         if (!Boolean(step.value)) {
           errors[`Step ${skey + 1}`] = `Please fill Step ${skey + 1}`;
         }
       });
-    } else if (selectedField == "Final Step") {
+    } else if (selectedField === "Final Step") {
       if (!Boolean(selectedRecipe.finish.value)) {
         errors[`Value`] = `Please fill the final step`;
       }
@@ -313,29 +313,29 @@ const RecipeDetails = () => {
       } else {
         setLoader(true);
         let recipe_obj = null;
-        if (selectedField == "Title") {
+        if (selectedField === "Title") {
           recipe_obj = {
             title: selectedRecipe.title,
             title_keywords: getAllSubstrings(selectedRecipe?.title),
           };
-        } else if (selectedField == "Type & Serves") {
+        } else if (selectedField === "Type & Serves") {
           recipe_obj = {
             type: selectedRecipe.type,
             serves: selectedRecipe.serves,
           };
-        } else if (selectedField == "Ingredients") {
+        } else if (selectedField === "Ingredients") {
           recipe_obj = {
             ingredients: [...selectedRecipe.ingredients],
           };
-        } else if (selectedField == "Steps") {
+        } else if (selectedField === "Steps") {
           recipe_obj = {
             steps: [...selectedRecipe.steps],
           };
-        } else if (selectedField == "Final Step" || type == "image") {
+        } else if (selectedField === "Final Step" || type === "image") {
           recipe_obj = {
             finish: { ...selectedRecipe.finish },
           };
-          if (type == "image") {
+          if (type === "image") {
             recipe_obj = {
               finish: { ...selectedRecipe.finish, imgSrc: val },
             };
@@ -370,7 +370,7 @@ const RecipeDetails = () => {
   };
 
   const returnModalBody = () => {
-    if (selectedField == "Title") {
+    if (selectedField === "Title") {
       return (
         <CSTMTextField
           placeholder="Eg: Chicken Biryani "
@@ -379,7 +379,7 @@ const RecipeDetails = () => {
           onChange={handleChanges}
         />
       );
-    } else if (selectedField == "Type & Serves") {
+    } else if (selectedField === "Type & Serves") {
       return (
         <Grid container spacing={1}>
           <Grid item xs={12} md={6}>
@@ -404,7 +404,7 @@ const RecipeDetails = () => {
           </Grid>
         </Grid>
       );
-    } else if (selectedField == "Ingredients") {
+    } else if (selectedField === "Ingredients") {
       return (
         <>
           <Grid container spacing={1}>
@@ -492,7 +492,7 @@ const RecipeDetails = () => {
           </Box>
         </>
       );
-    } else if (selectedField == "Steps") {
+    } else if (selectedField === "Steps") {
       return (
         <>
           {displayEditors ? (
@@ -556,7 +556,7 @@ const RecipeDetails = () => {
           )}
         </>
       );
-    } else if (selectedField == "Final Step") {
+    } else if (selectedField === "Final Step") {
       return (
         <>
           {displayEditors ? (
@@ -635,7 +635,7 @@ const RecipeDetails = () => {
                 src={recipe?.finish?.imgSrc}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 loading="lazy"
-                alt="Recipe Image"
+                alt="Recipe"
               />
             </motion.div>
             <Box
@@ -894,7 +894,7 @@ const RecipeDetails = () => {
                         sx={{
                           display: "none",
                           [bpSMd]: {
-                            display: activeTab == 2 ? "none" : "block",
+                            display: activeTab === 2 ? "none" : "block",
                           },
                         }}
                       >
@@ -925,7 +925,7 @@ const RecipeDetails = () => {
                       <Box
                         sx={{
                           [bpSMd]: {
-                            display: activeTab == 2 ? "none" : "block",
+                            display: activeTab === 2 ? "none" : "block",
                           },
                         }}
                       >
@@ -971,7 +971,7 @@ const RecipeDetails = () => {
                       <Box
                         sx={{
                           [bpSMd]: {
-                            display: activeTab == 1 ? "none" : "block",
+                            display: activeTab === 1 ? "none" : "block",
                           },
                         }}
                       >
