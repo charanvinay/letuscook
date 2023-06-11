@@ -253,26 +253,27 @@ const Finish = (props) => {
                     right: 9,
                   }}
                 >
-                  <Button
-                    component="label"
-                    sx={{
-                      minWidth: "20px",
-                      color: grey[700],
-                      padding: "0px 6px",
-                      zIndex: 2
-                    }}
-                  >
-                    <ImageIcon color="black" />
-                    <input
-                      hidden
-                      accept="image/*"
-                      type="file"
-                      name="imgSrc"
-                      onChange={(e) =>
-                        handleChanges(e.target.files[0], "image")
-                      }
-                    />
-                  </Button>
+                  <input
+                    accept="image/*"
+                    type="file"
+                    id="upload-image"
+                    name="imgSrc"
+                    style={{display: "none"}}
+                    onChange={(e) => handleChanges(e.target.files[0], "image")}
+                  />
+                  <label htmlFor="upload-image">
+                    <Button
+                      component="span"
+                      sx={{
+                        minWidth: "20px",
+                        color: grey[700],
+                        padding: "0px 6px",
+                        zIndex: 2,
+                      }}
+                    >
+                      <ImageIcon color="black" />
+                    </Button>
+                  </label>
                   {/* <Button
                     component="label"
                     sx={{
