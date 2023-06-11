@@ -95,12 +95,11 @@ const Finish = (props) => {
     if (type === "image") {
       let file = val;
       if (!file) return;
-      // setShowSkeleton(true);
-      alert("Added")
-      // if (recipe.finish.imgSrc) {
-      //   deletePreviousImage(recipe.finish.imgSrc);
-      // }
-      // handleUploadImage(file, type);
+      setShowSkeleton(true);
+      if (recipe.finish.imgSrc) {
+        deletePreviousImage(recipe.finish.imgSrc);
+      }
+      handleUploadImage(file, type);
     } else {
       dispatch(editFinish({ val: v, type }));
     }
@@ -261,9 +260,7 @@ const Finish = (props) => {
                     name="imgSrc"
                     style={{display: "none"}}
                     onChange={(e) => {
-                      e.preventDefault();
-                      alert(e.target.files[0].name);
-                      // handleChanges(e.target.files[0], "image")
+                      handleChanges(e.target.files[0], "image")
                     }}
                   />
                   <label htmlFor="upload-image">
