@@ -100,8 +100,6 @@ const RecipeDetails = () => {
   const bpSMd = theme.breakpoints.down("md");
   const id = new URLSearchParams(search).get("id");
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-  const isLoggedIn = Boolean(loggedUser) && Boolean(loggedUser.uid);
-  console.log(isLoggedIn);
   // useEffect(() => {
   //   if (!loggedUser) {
   //     return navigate("/login");
@@ -127,9 +125,9 @@ const RecipeDetails = () => {
 
   useEffect(() => {
     if (recipe && recipe.favouritedBy) {
-      console.log(recipe.favouritedBy, loggedUser?.uid);
+      // console.log(recipe.favouritedBy, loggedUser?.uid);
       let cond = recipe.favouritedBy.includes(loggedUser?.uid);
-      console.log(cond);
+      // console.log(cond);
       setLiked(cond);
     }
   }, [recipe]);
@@ -247,7 +245,7 @@ const RecipeDetails = () => {
       .then((snapshot) => {
         getDownloadURL(snapshot.ref)
           .then((url) => {
-            console.log(url);
+            // console.log(url);
             dispatch(editFinish({ val: url, type }));
             handleUpdate(type, url);
           })
@@ -307,7 +305,7 @@ const RecipeDetails = () => {
 
   const handleUpdate = (type, val) => {
     const taskDocRef = doc(db, "recipes", recipe._id);
-    console.log(selectedField, selectedRecipe.finish);
+    // console.log(selectedField, selectedRecipe.finish);
     try {
       if (Object.values(handleValidation(selectedRecipe)).length !== 0) {
         setErrorText(Object.values(handleValidation(selectedRecipe))[0]);
@@ -343,7 +341,7 @@ const RecipeDetails = () => {
             };
           }
         }
-        console.log(recipe_obj);
+        // console.log(recipe_obj);
         if (recipe_obj) {
           updateDoc(taskDocRef, recipe_obj)
             .then((res) => {
@@ -605,7 +603,7 @@ const RecipeDetails = () => {
         url: window.location.href
       };
       await navigator.share(shareData);
-      console.log('Content shared successfully');
+      // console.log('Content shared successfully');
     } catch (error) {
       console.error('Error sharing content:', error);
     }

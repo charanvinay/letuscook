@@ -13,17 +13,13 @@ import Login from "./component/login";
 import Navbar from "./component/navbar";
 import { store } from "./redux/store";
 import PageNotFound from "./Common/PageNotFound";
+import { useState } from "react";
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const showNav = ["/home", "/favourites", "/profile", "/add"].includes(location.pathname);
+  const [showNav, setShowNav] = useState(true)
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-  // useEffect(() => {
-  //   if (!loggedUser) {
-  //     navigate("/login");
-  //   }
-  // }, [loggedUser]);
 
   const isLoggedIn = Boolean(loggedUser) && Boolean(loggedUser.uid);
 
@@ -64,6 +60,8 @@ function App() {
         navigate("/home");
       }
     }
+    const show_nav = ["/home", "/favourites", "/profile", "/add"].includes(location.pathname);
+    setShowNav(show_nav);
   }, [location.pathname]);
 
   return (

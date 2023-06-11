@@ -34,7 +34,7 @@ export default function OtherRecipes({ id, uid, name }) {
             recipes.push({ _id: doc.id, ...doc.data() });
           }
         });
-        console.log(recipes);
+        // console.log(recipes);
         setRecipesList([...recipes]);
       }
     } catch (error) {
