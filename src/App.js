@@ -18,7 +18,6 @@ import { useState } from "react";
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [showNav, setShowNav] = useState(true)
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
   const isLoggedIn = Boolean(loggedUser) && Boolean(loggedUser.uid);
@@ -60,9 +59,9 @@ function App() {
         navigate("/home");
       }
     }
-    const show_nav = ["/home", "/favourites", "/profile", "/add"].includes(location.pathname);
-    setShowNav(show_nav);
   }, [location.pathname]);
+  
+  const showNav = ["/home", "/favourites", "/profile", "/add"].includes(location.pathname);
 
   return (
     <ThemeProvider theme={theme}>
