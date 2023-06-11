@@ -61,7 +61,7 @@ function App() {
     }
   }, [location.pathname]);
   
-  const showNav = ["/home", "/favourites", "/profile", "/add"].includes(location.pathname);
+  const showNav = ["/", "/home", "/favourites", "/profile", "/add"].includes(location.pathname);
 
   return (
     <ThemeProvider theme={theme}>
