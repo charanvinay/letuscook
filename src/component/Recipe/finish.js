@@ -95,8 +95,8 @@ const Finish = (props) => {
     if (type === "image") {
       let file = val;
       if (!file) return;
-      setShowSkeleton(true);
       alert("Added")
+      setShowSkeleton(true);
       // if (recipe.finish.imgSrc) {
       //   deletePreviousImage(recipe.finish.imgSrc);
       // }
