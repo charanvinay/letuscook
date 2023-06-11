@@ -261,7 +261,11 @@ const Finish = (props) => {
                     id="upload-image"
                     name="imgSrc"
                     style={{display: "none"}}
-                    onChange={(e) => handleChanges(e.target.files[0], "image")}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      alert(e.target.files[0].name);
+                      // handleChanges(e.target.files[0], "image")
+                    }}
                   />
                   <label htmlFor="upload-image">
                     <Button
