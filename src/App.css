@@ -15,7 +15,7 @@
 }
 
 body {
-  background-color: var(--bg-secondary);
+  /* background-color: var(--bg-secondary); */
   /* font-family: "Gordita", sans-serif !important; */
 }
 
@@ -43,10 +43,11 @@ thead tr th{
 }
 
 .app__navbar {
-  background-color: rgba(255, 255, 255, 0.25) !important;
+  /* background-color: rgba(255, 255, 255, 0.25) !important; */
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0px 20px;
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.18); */
 }
 
 .MuiChip-label, .MuiStepLabel-label, .MuiListSubheader-root{

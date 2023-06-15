@@ -775,13 +775,12 @@ const RecipeDetails = () => {
               sx={{
                 position: "relative",
                 borderRadius: "15px 15px 0px 0px",
-                backgroundColor: "#EDF2F8",
                 boxShadow: "0 -18px 15px 1px rgb(0 0 0 / 43%)",
               }}
             >
               {/* <motion.div className="progress-bar" style={{ scaleX: scrollYProgress }} />  */}
               <TopProgress />
-              <Container sx={{ position: "relative" }}>
+              <Container sx={{ position: "relative", borderRadius: "15px 15px 0px 0px", }}>
                 <Grid
                   container
                   spacing={{ xs: 6, md: 3 }}

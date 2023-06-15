@@ -136,8 +136,6 @@ const RecipeCard = (props) => {
             borderRadius: "10px",
             position: "relative",
             cursor: "pointer",
-            boxShadow:
-              "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
           }}
           onClick={() => {
             navigate(navTo, { state: { previousRoute: location.pathname }});

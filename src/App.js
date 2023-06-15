@@ -1,10 +1,10 @@
-import { ThemeProvider, Toolbar } from "@mui/material";
-import React, { useEffect } from "react";
+import { CssBaseline, ThemeProvider, Toolbar, createTheme, useMediaQuery } from "@mui/material";
+import React, { useEffect, useMemo } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
-import { capitalize, theme } from "./Common/Constants";
+import { capitalize, getDesignTokens } from "./Common/Constants";
 import Profile from "./component/Profile/profile";
 import RecipeDetails from "./component/Profile/recipe_details";
 import AddRecipe from "./component/Recipe/add";
@@ -19,6 +19,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const isLoggedIn = Boolean(loggedUser) && Boolean(loggedUser.uid);
 
@@ -63,8 +64,11 @@ function App() {
   
   const showNav = ["", "home", "favourites", "profile", "add"].includes(location.pathname.split("/")[1]);
 
+  const cstm_theme = useMemo(() => createTheme(getDesignTokens(prefersDarkMode)), [prefersDarkMode]);
+  
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={cstm_theme}>
+      <CssBaseline />
       <Provider store={store}>
         {showNav && <Navbar />}
         {showNav && <Toolbar />}

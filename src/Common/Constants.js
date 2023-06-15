@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material";
-import { bgSecondary, primary } from "./Pallete";
+import { APPBAR_LIGHT_DEFAULT, BG_DARK_DEFAULT, BG_LIGHT_DEFAULT, BG_DARK_PAPER, bgSecondary, primary, APPBAR_DARK_DEFAULT, CARD_BOXSHADOW_LIGHT_DEFAULT, CARD_BOXSHADOW_DARK_DEFAULT } from "./Pallete";
 import Beverages from "./Ribbons/Beverages";
 import Breakfast from "./Ribbons/Breakfast";
 import Egg from "./Ribbons/Egg";
@@ -59,8 +59,10 @@ export const colourStyles = {
     },
   }),
 };
-
-export const theme = createTheme({
+export const getDesignTokens = (mode) => ({
+  ...(mode === 'light'? lightTheme : darkTheme)
+});
+export const lightTheme = {
   palette: {
     primary: {
       main: primary,
@@ -68,6 +70,9 @@ export const theme = createTheme({
     secondary: {
       main: "#ffa500",
     },
+    background: {
+      default: BG_LIGHT_DEFAULT,
+    }
   },
   typography: {
     subtitle1: {
@@ -145,8 +150,144 @@ export const theme = createTheme({
         },
       },
     },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          backgroundColor: BG_LIGHT_DEFAULT,
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: APPBAR_LIGHT_DEFAULT,
+          borderBottom: "1px solid rgba(255, 255, 255, 0.18)"
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: CARD_BOXSHADOW_LIGHT_DEFAULT, 
+        },
+      },
+    },
   },
-});
+};
+export const darkTheme = {
+  palette: {
+    mode: "dark",
+    primary: {
+      main: primary,
+    },
+    secondary: {
+      main: "#ffa500",
+    },
+    background: {
+      default: BG_DARK_DEFAULT,
+      paper: BG_DARK_PAPER
+    }
+  },
+  typography: {
+    subtitle1: {
+      fontSize: "14px",
+      letterSpacing: 0.5,
+      fontWeight: "500",
+    },
+    subtitle2: {
+      fontSize: "14px",
+    },
+    body1: {
+      fontSize: "16px",
+      letterSpacing: 0.4,
+    },
+    h1: {
+      fontSize: "18px",
+      fontWeight: "bold",
+      letterSpacing: 0.5,
+    },
+  },
+  components: {
+    FormControlLabel: {
+      root: {
+        fontWeight: "400",
+        color: "#ff0000",
+      },
+    },
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: "text" },
+          style: {
+            fontWeight: "600",
+            letterSpacing: 0.7,
+            fontSize: "14px",
+            textTransform: "none",
+          },
+        },
+        {
+          props: { variant: "contained" },
+          style: {
+            textTransform: "none",
+            // fontWeight: "600",
+            fontFamily: "Poppins, sans-serif !important",
+            // fontSize: "16px",
+            letterSpacing: 0,
+          },
+        },
+        {
+          props: { variant: "outlined" },
+          style: {
+            textTransform: "none",
+            // fontWeight: "600",
+            fontFamily: "Poppins, sans-serif !important",
+            // fontSize: "16px",
+            letterSpacing: 0,
+          },
+        },
+      ],
+    },
+    MuiChip: {
+      styles: {
+        fontSize: "20px",
+      },
+    },
+    MuiStepper: {
+      styles: {
+        fontSize: "20px",
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontFamily: "Poppins, sans-serif !important"
+        },
+      },
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          backgroundColor: BG_DARK_DEFAULT,
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: APPBAR_DARK_DEFAULT,
+          borderBottom: "1px solid #001e3c1f"
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: CARD_BOXSHADOW_DARK_DEFAULT, 
+        },
+      },
+    },
+  },
+}
 
 export const bottomButtonsStyle = {
   display: "flex",

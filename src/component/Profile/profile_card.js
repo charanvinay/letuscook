@@ -28,8 +28,6 @@ const ProfileCard = ({ username, recipesCount, favouritesCount }) => {
           //   "linear-gradient(25deg, #142374, #1922a0, #1a1ccf, #150bff)",
           backgroundImage:
             "linear-gradient(25deg, #0012d9, #1c43e6, #1f67f2, #0489ff)",
-          boxShadow:
-            "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)",
         }}
       >
         <Stack sx={{ textAlign: "center" }} spacing={1} alignItems="center">

@@ -72,8 +72,7 @@ function Navbar() {
 
   return (
     <AppBar className="app__navbar" elevation={0}>
-      <Container maxWidth="xl">
-        <Toolbar
+      <Toolbar
           disableGutters
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
@@ -170,8 +169,7 @@ function Navbar() {
               </Box>
             </Stack>
           )}
-        </Toolbar>
-      </Container>
+      </Toolbar>
     </AppBar>
   );
 }
