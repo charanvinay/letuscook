@@ -97,6 +97,7 @@ const RecipeDetails = () => {
   const activeTab = useSelector(getActiveTab);
   const selectedRecipe = useSelector(getRecipe);
 
+  const { mode, background } = theme.palette;
   const bpSMd = theme.breakpoints.down("md");
   const id = new URLSearchParams(search).get("id");
   const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -780,7 +781,7 @@ const RecipeDetails = () => {
             >
               {/* <motion.div className="progress-bar" style={{ scaleX: scrollYProgress }} />  */}
               <TopProgress />
-              <Container sx={{ position: "relative", borderRadius: "15px 15px 0px 0px", }}>
+              <Container maxWidth="xl" sx={{ position: "relative", borderRadius: "15px 15px 0px 0px", paddingX: "20px !important" }}>
                 <Grid
                   container
                   spacing={{ xs: 6, md: 3 }}
@@ -953,6 +954,9 @@ const RecipeDetails = () => {
                                     direction={"row"}
                                     justifyContent="space-between"
                                     className="row-item"
+                                    sx={{
+                                      backgroundColor: mode === "dark" && background.paper
+                                    }}
                                   >
                                     <Subtitle1 text={ingredient.value} />
                                     <Subtitle1

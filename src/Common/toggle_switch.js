@@ -3,10 +3,13 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../redux/slices/userSlice";
 import { primary } from "./Pallete";
+import { Typography, useTheme } from "@mui/material";
 
 const ToggleSwitch = () => {
   const [selectedOption, setSelectedOption] = useState(1);
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const { mode, background } = theme.palette;
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
@@ -29,7 +32,7 @@ const ToggleSwitch = () => {
       <div
         style={{
           display: "flex",
-          backgroundColor: "rgb(215 230 249)",
+          backgroundColor: mode === "dark" ? background.paper : "rgb(215 230 249)",
           borderRadius: "10px",
           padding: 6,
           marginTop: "20px",
@@ -48,7 +51,7 @@ const ToggleSwitch = () => {
               position: "relative",
             }}
             animate={{
-              color: selectedOption === option.id ? "white" : "black",
+              color: selectedOption === option.id ? "white" : mode === "dark" ? "white" : "black",
             }}
             onClick={() => handleOptionChange(option.id)}
           >

@@ -1,6 +1,6 @@
 export const primary = "#176ede";
-export const BG_DARK_DEFAULT = "#0A1929";
-export const BG_DARK_PAPER = "#001E3C";
+export const BG_DARK_DEFAULT = "#1A1A1A";
+export const BG_DARK_PAPER = "#282828";
 export const BG_LIGHT_DEFAULT = "#EDF2F8";
 export const primaryLight = "#75aaf0";
 export const bgSecondary = "#F8F9FA";
@@ -10,6 +10,6 @@ export const borderDark = "#D4D9E2";
 export const grey = "#e6e6e6";
 export const secondaryTextColor = "#8c8c8c";
 export const APPBAR_LIGHT_DEFAULT = "rgba(255, 255, 255, 0.25)";
-export const APPBAR_DARK_DEFAULT = "rgba(0, 0, 0, 0.15)";
+export const APPBAR_DARK_DEFAULT = "rgb(41 41 41 / 60%)";
 export const CARD_BOXSHADOW_LIGHT_DEFAULT = "1px 2px 2px hsl(0deg 0% 50% / 0.2), 2px 4px 4px hsl(0deg 0% 50% / 0.2), 4px 8px 8px hsl(0deg 0% 50% / 0.2), 8px 16px 16px hsl(0deg 0% 50% / 0.2), 16px 32px 32px hsl(0deg 0% 50% / 0.2)";
 export const CARD_BOXSHADOW_DARK_DEFAULT = "0 2px 20px rgba(0, 0, 0, 0.87)";

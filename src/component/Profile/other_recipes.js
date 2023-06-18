@@ -1,4 +1,4 @@
-import { Avatar, Divider, ListItemAvatar, Paper } from "@mui/material";
+import { Avatar, Button, Divider, ListItemAvatar, Paper, useTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -14,6 +14,9 @@ export default function OtherRecipes({ id, uid, name }) {
   const [loadding, setLoadding] = useState(true);
   const [recipesList, setRecipesList] = useState([]);
   const navigate = useNavigate();
+
+  const theme = useTheme();
+  const { mode } = theme.palette;
 
   useEffect(() => {
     if (uid) {
@@ -59,7 +62,7 @@ export default function OtherRecipes({ id, uid, name }) {
               borderRadius: "8px",
               padding: "24px",
               overflow: "hidden",
-              boxShadow: "0px 1px 8px rgb(23 110 222 / 10%)",
+              boxShadow: mode === "light" && "0px 1px 8px rgb(23 110 222 / 10%)",
             }}
           >
             <List
@@ -67,19 +70,16 @@ export default function OtherRecipes({ id, uid, name }) {
               component="nav"
               aria-labelledby="nested-list-subheader"
               subheader={
-                <ListSubheader
-                  component="div"
+                <Button
+                  fullWidth={true}
                   id="nested-list-subheader"
                   sx={{
                     textTransform: "capitalize",
-                    lineHeight: 1.6,
-                    padding: 0,
-                    cursor: "pointer",
                   }}
                   onClick={()=>navigate(`/profile/${uid}`)}
                 >
                   Other recipes of {name}
-                </ListSubheader>
+                </Button>
               }
             >
               {loadding ? (
