@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   activeStep: 0,
   isMobile: true,
+  isDarkMode: false,
   activeTab: 1,
   loggedUser: {},
 };
@@ -27,13 +28,17 @@ export const userSlice = createSlice({
     },
     setIsMobile: (state, action) => {
       state.isMobile = action.payload
+    },
+    setIsDarkMode: (state, action) => {
+      state.isDarkMode = action.payload
     }
   },
 });
 
 export const getIsMobile = (state) => state.userReducer.isMobile;
+export const getIsDarkMode = (state) => state.userReducer.isDarkMode;
 export const getActiveStep = (state) => state.userReducer.activeStep;
 export const getActiveTab = (state) => state.userReducer.activeTab;
 export const getLoggedUser = (state) => state.userReducer.loggedUser;
-export const { handleNext, handleBack, handleReset, handleLoggedUser, setIsMobile, setActiveTab } = userSlice.actions;
+export const { handleNext, handleBack, handleReset, handleLoggedUser, setIsMobile, setIsDarkMode, setActiveTab } = userSlice.actions;
 export default userSlice.reducer;

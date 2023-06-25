@@ -68,7 +68,6 @@ function Login() {
             justifyContent: "center",
             position: "relative",
             overflow: "hidden",
-            backgroundColor: bgSecondary,
           }}
         >
           <RingLG />
