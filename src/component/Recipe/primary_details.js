@@ -197,7 +197,7 @@ const PrimaryDetails = (props) => {
                       Units
                     </Typography>
                     <CSTMTextField
-                      placeholder="Eg: 1 tbsp "
+                      placeholder="Eg: 1 tbspn "
                       name="title"
                       value={ingredient.units}
                       onChange={(e) =>

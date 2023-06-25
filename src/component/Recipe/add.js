@@ -26,6 +26,7 @@ export default function AddRecipe() {
 
   // create an event listener
   useEffect(() => {
+    window.scrollTo(0, 0);
     dispatch(setIsMobile(window.innerWidth < 800));
   }, []);
 
