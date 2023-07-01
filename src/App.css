@@ -4,6 +4,12 @@
   --bg-primary: #fff;
   --bg-secondary: #EDF2F8;
   --bg-terinary: #fafafa;
+  --editor-bg-light: white;
+  --editor-bg-dark: #282828;
+  --editor-btn-color-light: #444;
+  --editor-btn-color-dark: white;
+  --editor-border-light: #ccc;
+  --editor-border-dark: #1b1a1a;
 }
 
 * {
@@ -103,29 +109,40 @@ thead tr th{
   align-items: center;
 }
 
-.ql-container {
+.ctsm-editor .ql-container {
   border-bottom-left-radius: 0.4em;
   border-bottom-right-radius: 0.4em;
-  background: white;
+  background: var(--editor-bg-light);
 }
 
 /* Snow Theme */
-.ql-snow.ql-toolbar {
+.ctsm-editor .ql-snow.ql-toolbar {
   position: sticky;
   display: block;
-  background: #fff;
+  background: var(--editor-bg-light);
   border-top-left-radius: 0.4em;
   top: -20px;
   z-index: 1;
   border-top-right-radius: 0.4em;
 }
-
+.ctsm-editor .ql-snow .ql-stroke{
+  stroke: var(--editor-btn-color-light) !important;
+}
+.ctsm-editor .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill{
+  fill: var(--editor-btn-color-light) !important;
+}
 /* Bubble Theme */
 .ql-bubble .ql-editor {
   border: 1px solid #ccc;
   border-radius: 0.4em;
 }
+.ql-toolbar.ql-snow{
+  border: 1px solid var(--editor-border-light)
+}
 
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiDialog-paperScrollPaper{
+  background-image: none !important;
+}
 .ql-editor {
   min-height: 80px;
 }
@@ -168,4 +185,25 @@ thead tr th{
     width: 90%;
     /* height: 60% */
   }
+}
+.ctsm-editor.dark .ql-toolbar.ql-snow{
+  border: 1px solid var(--editor-border-dark)
+}
+.ctsm-editor.dark .ql-container.ql-snow{
+  border: 1px solid var(--editor-border-dark)
+}
+.ctsm-editor.dark .ql-container {
+  background: var(--editor-bg-dark);
+}
+.ctsm-editor.dark .ql-editor.ql-blank::before{
+  color: white;
+}
+.ctsm-editor.dark .ql-snow.ql-toolbar {
+  background: var(--editor-bg-dark);
+}
+.ctsm-editor.dark .ql-snow .ql-stroke{
+  stroke: var(--editor-btn-color-dark) !important;
+}
+.ctsm-editor.dark .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill{
+  fill: var(--editor-btn-color-dark) !important;
 }

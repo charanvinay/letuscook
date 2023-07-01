@@ -23,7 +23,7 @@ const CompleteRecipe = () => {
     </motion.div>
   );
   return (
-    <Container maxWidth="xl" sx={{ marginTop: 2, marginBottom: 5 }}>
+    <Container maxWidth="xl" sx={{ paddingTop: 2, paddingBottom: 5 }}>
       <Box sx={{ textAlign: "center" }}>
         {returnMotionDiv(<HeadingLG text={recipe.title} />)}
         {returnMotionDiv(

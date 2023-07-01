@@ -64,6 +64,7 @@ import {
 } from "../../redux/slices/recipeSlice";
 import {
   getActiveTab,
+  getIsDarkMode,
   getIsMobile,
   setActiveTab,
 } from "../../redux/slices/userSlice";
@@ -92,9 +93,10 @@ const RecipeDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const search = location.search;
-
+  
   const isMobile = useSelector(getIsMobile);
   const activeTab = useSelector(getActiveTab);
+  const isDarkMode = useSelector(getIsDarkMode);
   const selectedRecipe = useSelector(getRecipe);
 
   const { mode, background } = theme.palette;
@@ -781,7 +783,7 @@ const RecipeDetails = () => {
             >
               {/* <motion.div className="progress-bar" style={{ scaleX: scrollYProgress }} />  */}
               <TopProgress />
-              <Container maxWidth="xl" sx={{ position: "relative", borderRadius: "15px 15px 0px 0px", paddingX: "20px !important" }}>
+              <Container maxWidth="xl" sx={{ position: "relative", borderRadius: "15px 15px 0px 0px", paddingX: "60px !important", [bpSMd]: { paddingX: "25px !important"} }}>
                 <Grid
                   container
                   spacing={{ xs: 6, md: 3 }}
@@ -1071,7 +1073,7 @@ const RecipeDetails = () => {
                     width: "50px",
                     height: "8px",
                     borderRadius: "5px",
-                    backgroundColor: "rgb(0 0 0 / 12%)",
+                    backgroundColor: isDarkMode ? "rgb(255 255 255 / 12%)" : "rgb(0 0 0 / 12%)",
                     [bpSMd]: { display: "block" },
                   }}
                 />

@@ -46,6 +46,7 @@ import {
 } from "../../redux/slices/userSlice";
 import { db, storage } from "../../services/firebase";
 import CompleteRecipe from "./complete_recipe";
+import { primary } from "../../Common/Pallete";
 
 const CKeditorRender = lazy(() => import("../../Common/CKEditorComp.js"));
 
@@ -268,7 +269,6 @@ const Finish = (props) => {
                       component="span"
                       sx={{
                         minWidth: "20px",
-                        color: grey[700],
                         padding: "0px 6px",
                         zIndex: 2,
                       }}
@@ -376,7 +376,7 @@ const Finish = (props) => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <AppBar>
+        <AppBar sx={{backgroundColor: primary}}>
           <Toolbar>
             <IconButton
               edge="start"

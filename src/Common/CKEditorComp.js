@@ -1,5 +1,7 @@
 import React from "react";
 import ReactQuill from "react-quill";
+import { useSelector } from "react-redux";
+import { getIsDarkMode } from "../redux/slices/userSlice";
 
 const modules = {
   toolbar: [
@@ -34,27 +36,11 @@ const formats = [
 
 const CKEditorComp = (props) => {
   const handleChange = (html) => {
-    console.log(html);
     props.handleChanges(html);
   };
+  const isDarkMode = useSelector(getIsDarkMode);
+  const classname = isDarkMode ? "ctsm-editor dark" : "ctsm-editor"
   return (
-    // <CKEditor
-    //   editor={ClassicEditor}
-    //   config={{
-    //     placeholder: "Type your text here...",
-    //     // plugins: [ Paragraph, Bold, Italic, Essentials ],
-    //     toolbar: ["bold", "italic", "|", "bulletedList", "numberedList"],
-    //   }}
-    //   data={props.value}
-    //   onReady={(editor) => {
-    //     // editor.focus();
-    //   }}
-    //   key={props.id}
-    //   onChange={(event, editor) => {
-    //     const data = editor.getData();
-    //     props.handleChanges(data);
-    //   }}
-    // />
     <ReactQuill
       theme="snow"
       onChange={handleChange}
@@ -62,6 +48,7 @@ const CKEditorComp = (props) => {
       modules={modules}
       formats={formats}
       // bounds={".app"}
+      className={classname}
       placeholder="Type your text here..."
     />
   );
